@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册和登录页面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('../static/img/welcome.png') no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: rgb(216, 51, 51);
+            text-align: center;
+            padding-top: 50px;
+        }
+        a {
+            color: rgb(26, 99, 24);
+            text-decoration: none;
+            margin: 10px;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>欢迎来到我们的网站</h1>
+    <p>请选择以下选项进行注册或登录：</p>
+    <a href="/user/register/">用户注册</a>
+    <a href="/admin/register/">管理员注册</a>
+    <a href="/user/login/">用户登录</a>
+    <a href="/admin/login/">管理员登录</a>
+</body>
+</html>

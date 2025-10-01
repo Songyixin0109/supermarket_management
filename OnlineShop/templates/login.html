@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录界面</title>
+    <!-- 引入Bootstrap CSS -->
+    <link href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .login-container {
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2 class="text-center mb-4">登录</h2>
+        <form id="loginForm" method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.label }}">{{ field.label }}</label>
+                {{ field }}
+                <span style="color: red">{{ field.errors.0 }}</span>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary w-100">登录</button>
+        </form>
+    </div>
+
+    <!-- 引入jQuery -->
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    <!-- 引入Bootstrap JS -->
+    <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+    <!-- 自定义脚本 -->
+    <!-- <script>
+        $(document).ready(function() {
+            $('#loginForm').on('submit', function(event) {
+                event.preventDefault(); // 阻止表单默认提交行为
+
+                // 获取用户名和密码
+                const username = $('#username').val();
+                const password = $('#password').val();
+
+                // 这里可以添加登录验证逻辑
+                console.log('用户名:', username);
+                console.log('密码:', password);
+
+                // 模拟登录成功
+                alert('登录成功！');
+            });
+        });
+    </script> -->
+</body>
+</html>
