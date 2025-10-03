@@ -25,10 +25,6 @@ Django+MySQL+HTML+CSS+JS
 - 增加支付功能，支持在线支付。
 - 完善用户中心，增加订单管理、个人信息等功能。
 
-# 联系方式
-如有任何问题，请通过以下方式联系我：
-- 邮箱：2501552703@qq.com
-- GitHub：https://github.com/lingyu-code/OnlineShop
 
 # 版权声明
 本项目遵循MIT开源协议，请遵守相关法律法规，合理使用本项目。

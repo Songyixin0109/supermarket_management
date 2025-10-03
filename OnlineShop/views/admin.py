@@ -45,10 +45,10 @@ class AdminModelForm(BootStrapModelForm):
             raise ValidationError("密码必须包含至少一个大写字母")
         return md5(password)
     def clean_confirm_password(self):
-        password = self.cleaned_data['password']
-        confirm_password = md5(self.cleaned_data['confirm_password'])
-        if password != confirm_password:
-            raise ValidationError('密码不一致')
+        password = self.cleaned_data.get('password') 
+        confirm_password = self.cleaned_data.get('confirm_password')  
+        if password != md5(confirm_password):
+            raise forms.ValidationError('两次密码输入不一致')
         return confirm_password
     def clean_username(self):
         username = self.cleaned_data.get('username')

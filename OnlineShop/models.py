@@ -116,7 +116,7 @@ class EmployeeInfo(models.Model):
     position = models.CharField(max_length=16, blank=True, null=True)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = 'employee_info'
 
 
@@ -128,7 +128,7 @@ class InventoryItems(models.Model):
     inventory_quantity = models.IntegerField()
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = 'inventory_items'
 
     def __str__(self):
@@ -142,7 +142,7 @@ class MerchantInfo(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = 'merchant_info'
 
 
@@ -153,7 +153,7 @@ class MerchantItems(models.Model):
     purchase_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = 'merchant_items'
 
 
@@ -163,7 +163,7 @@ class PurchaseItems(models.Model):
     catalog = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = 'purchase_items'
 
 
@@ -173,7 +173,7 @@ class PurchaseOrders(models.Model):
     employee = models.ForeignKey(EmployeeInfo, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = 'purchase_orders'
 
 
@@ -184,7 +184,7 @@ class SellOrders(models.Model):
     order_data =  models.TimeField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = 'sell_orders'
 
 
@@ -197,7 +197,7 @@ class UserInfo(models.Model):
     email = models.CharField(max_length=32, blank=True, null=True)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = 'user_info'
     def __str__(self):
         return self.username

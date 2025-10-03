@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'DjangoProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'onlinshop',
+        'NAME': 'onlineshop',
         'USER': 'root',
         'PASSWORD': 'root123',
         'HOST': '127.0.0.1',
