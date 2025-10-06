@@ -1,71 +1,72 @@
 {% extends 'layout/layout_admin.html' %}
 {% block content %}
-    <div class="container">
-        <div style="margin-bottom: 10px">
-            <a class="btn btn-success" href="/user/register/">register</a>
-        </div>
-
-        <div style="float: right;width: 300px">
-            <form method="get">
-                <div class="input-group">
-                    <input type="text" name="search_data" class="form-control" placeholder="Search for..." value="{{ search_data }}">
-                    <span class="input-group-btn">
-        <button class="btn btn-default" type="submit">
-            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-        </button>
-            </span>
-                </div>
-            </form>
-        </div>
-        <div class="panel panel-default">
-            <!-- Default panel contents -->
-            <div class="panel-heading">User Information</div>
-            <div class="panel-body">
-                <p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum
-                    nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis
-                    vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </div>
-
-            <!-- Table -->
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>id</th>
-                    <th>username</th>
-                    <th>password</th>
-                    <th>name</th>
-                    <th>sex</th>
-                    <th>phone</th>
-                    <th>email</th>
-                    <th>Operation</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for obj in user_list %}
-                    <tr>
-                        <td>{{ obj.id }}</td>
-                        <td>{{ obj.username }}</td>
-                        <td>{{ obj.password }}</td>
-                        <td>{{ obj.name }}</td>
-                        <td>{{ obj.sex }}</td>
-                        <td>{{ obj.phone }}</td>
-                        <td>{{ obj.email }}</td>
-                        <td>
-                            <a class="btn btn-primary btn-xs" href="/user/edit/{{ obj.id }}/">edit</a>
-                            <a class="btn btn-danger btn-xs" href="/user/delete/{{ obj.id }}/">delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <nav aria-label="Page navigation">
-            <ul class="pagination">
-                {{ page_string }}
-            </ul>
-        </nav>
-
-
+<div class="container">
+    <div style="margin-bottom: 10px">
+        <a class="btn btn-success" href="/user/register/">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            新建用户
+        </a>
     </div>
+
+    <div style="float: right;width: 300px">
+        <form method="get">
+            <div class="input-group">
+                <input type="text" name="search_data" class="form-control" placeholder="搜索..."
+                    value="{{ search_data }}">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </span>
+            </div>
+        </form>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            用户信息
+        </div>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>密码</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>电话号码</th>
+                    <th>邮箱</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in user_list %}
+                <tr>
+                    <td>{{ obj.id }}</td>
+                    <td>{{ obj.username }}</td>
+                    <td>********</td>
+                    <td>{{ obj.name }}</td>
+                    <td>{{ obj.gender }}</td>
+                    <td>{{ obj.phone }}</td>
+                    <td>{{ obj.email }}</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/user/edit/{{ obj.id }}/">编 辑</a>
+                        <a class="btn btn-danger btn-xs" href="/user/delete/{{ obj.id }}/">删 除</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {{ page_string }}
+        </ul>
+    </nav>
+
+
+</div>
 {% endblock %}

@@ -18,22 +18,20 @@
             </form>
         </div>
         <div class="panel panel-default">
-            <!-- Default panel contents -->
             <div class="panel-heading">{{ title }}</div>
-            <div class="panel-body">
+            <!-- <div class="panel-body">
                 <p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum
                     nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis
                     vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </div>
+            </div> -->
 
-            <!-- Table -->
             <table class="table">
                 <thead>
                 <tr>
-                    <th>id</th>
-                    <th>username</th>
-                    <th>password</th>
-                    <th>Operation</th>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>密码</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -41,10 +39,10 @@
                     <tr>
                         <td>{{ obj.id }}</td>
                         <td>{{ obj.username }}</td>
-                        <td>{{ obj.password }}</td>
+                        <td>********</td>
                         <td>
-                            <a class="btn btn-primary btn-xs" href="/admin/edit/{{ obj.id }}">edit</a>
-                            <a class="btn btn-danger btn-xs" href="/admin/delete/{{ obj.id }}">delete</a>
+                            <a class="btn btn-primary btn-xs" href="/admin/edit/{{ obj.id }}">编 辑</a>
+                            <a class="btn btn-danger btn-xs" href="/admin/delete/{{ obj.id }}">删 除</a>
                         </td>
                     </tr>
                 {% endfor %}

@@ -1,127 +1,134 @@
 {% extends 'layout/layout_user.html' %}
+
 {% block content %}
-    <div>
-    <div class="container">
-        <div>
-            <input type="button" value="新建订单" class="btn btn-success" data-toggle="modal" data-target="#myModal">
-        </div>
+<div class="container">
+    {# 顶部按钮 #}
+    <div style="margin-bottom: 10px">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            新建订单
+        </button>
     </div>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">订单</h4>
-      </div>
-      <div class="modal-body">
-        <div class="panel-body">
+    {# 搜索栏 #}
+    <div style="float: right; width: 300px">
+        <form method="get">
+            <div class="input-group">
+                <input type="text" name="search_data" class="form-control" placeholder="搜索..."
+                    value="{{ search_data }}">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </span>
+            </div>
+        </form>
+    </div>
+
+    {# 订单列表面板 #}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            我的订单
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>商品</th>
+                    <th>数量</th>
+                    <th>下单时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in sell_orders %}
+                <tr>
+                    <td>{{ obj.id }}</td>
+                    <td>{{ obj.inventory_items.name }}</td>
+                    <td>{{ obj.order_quantity }}</td>
+                    <td>{{ obj.order_date|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <a class="btn btn-danger btn-xs" href="/sellorder/delete/user/{{ obj.id }}/">
+                            <span class="glyphicon glyphicon-trash"></span> 删 除
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# 分页 #}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {{ page_string }}
+        </ul>
+    </nav>
+</div>
+
+{# 新建订单弹窗 #}
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">新建订单</h4>
+            </div>
+            <div class="modal-body">
                 <form id="formAdd" class="form-horizontal" method="post" novalidate>
                     {% csrf_token %}
                     {% for field in form %}
-                        <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">{{ field.label }}</label>
-                        <div class="col-sm-10">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">{{ field.label }}</label>
+                        <div class="col-sm-8">
                             {{ field }}
-                            <span style="color: red">{{ field.errors.0 }}</span>
+                            <span class="error-msg" style="color: red;"></span>
                         </div>
                     </div>
                     {% endfor %}
                 </form>
             </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
-        <button id="btnSave" type="button" class="btn btn-primary">保 存</button>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-
-    <div class="container">
-        <div style="float: right;width: 300px">
-            <form method="get">
-                <div class="input-group">
-                    <input type="text" name="search_data" class="form-control" placeholder="Search for..." value="{{ search_data }}">
-                    <span class="input-group-btn">
-        <button class="btn btn-default" type="submit">
-            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-        </button>
-            </span>
-                </div>
-            </form>
-        </div>
-        <div class="panel panel-default">
-            <!-- Default panel contents -->
-            <div class="panel-heading">{{ title }} Information</div>
-            <div class="panel-body">
-                <p>Some default panel content here. </p>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="btnSave" type="button" class="btn btn-primary">保存</button>
             </div>
-
-            <!-- Table -->
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>id</th>
-                    <th>user</th>
-                    <th>inventory_items</th>
-                    <th>order_quantity</th>
-                    <th>order_data</th>
-                    <th>Operation</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for obj in sell_orders %}
-                    <tr>
-                        <td>{{ obj.id }}</td>
-                        <td>{{ obj.user.username }}</td>
-                        <td>{{ obj.inventory_items.name }}</td>
-                        <td>{{ obj.order_quantity }}</td>
-                        <td>{{ obj.order_data}}</td>
-                        <td>
-                            <a class="btn btn-danger btn-xs" href="/sellorder/delete/user/{{ obj.id }}/">delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
         </div>
-        <nav aria-label="Page navigation">
-            <ul class="pagination">
-                {{ page_string }}
-            </ul>
-        </nav>
     </div>
+</div>
 {% endblock %}
-{% block js %}
-<script type="text/javascript">
-    $(function(){
-        bindBtnSaveEvent();
-    })
 
-    function bindBtnSaveEvent(){
-        $("#btnSave").click(function (){
+{% block js %}
+<script>
+    $(function () {
+        bindBtnSaveEvent();
+    });
+
+    function bindBtnSaveEvent() {
+        $("#btnSave").click(function () {
             $('.error-msg').empty();
             $.ajax({
-                url:'/sellorder/add/',
-                type:'post',
-                data:$('#formAdd').serialize(),
-                dataType:'JSON',
-                success:function (res){
-                    if(res.status==='True'){
+                url: '/sellorder/add/',
+                type: 'post',
+                data: $('#formAdd').serialize(),
+                dataType: 'JSON',
+                success: function (res) {
+                    if (res.status === 'True') {
                         alert('提交成功');
                         $('#formAdd')[0].reset();
                         $('#myModal').modal('hide');
-                    }else{
-                        $.each(res.error,function(name,errorList){
-                            $('#id_'+name).next().text(errorList[0]);
-                        })
+                        location.reload();   // 可选：刷新列表
+                    } else {
+                        $.each(res.error, function (name, errorList) {
+                            $('#id_' + name).next('.error-msg').text(errorList[0]);
+                        });
                     }
                 }
-            })
-
-        })
+            });
+        });
     }
 </script>
 {% endblock %}

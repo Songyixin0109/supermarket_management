@@ -15,7 +15,7 @@ def admin_info(request):
         data_dict['username__contains'] = search_data
     queryset = models.Admin.objects.filter(**data_dict)
     page_object = Pagination(request, queryset)
-    title = 'Administrator Information'
+    title = '管理员信息'
     context = {
                 'admin_list': page_object.page_queryset,
                 'title': title,

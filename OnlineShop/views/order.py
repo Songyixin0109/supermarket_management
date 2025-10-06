@@ -30,7 +30,7 @@ def sellorder_info_admin(request):
         queryset = models.SellOrders.objects.filter(**data_dict).select_related('user', 'inventory_items')
         page_object = Pagination(request, queryset)
         form = SellOrderInfoModelForm()
-        title='Sell Order'
+        title='所有订单'
         context = {
             'form': form,
             'sell_orders': page_object.page_queryset,

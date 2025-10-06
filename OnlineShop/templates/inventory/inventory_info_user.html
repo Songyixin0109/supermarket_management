@@ -4,7 +4,7 @@
         <div style="float: right;width: 300px">
             <form method="get">
                 <div class="input-group">
-                    <input type="text" name="search_data" class="form-control" placeholder="Search for..." value="">
+                    <input type="text" name="search_data" class="form-control" placeholder="搜索..." value="">
                     <span class="input-group-btn">
         <button class="btn btn-default" type="submit">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -14,34 +14,32 @@
             </form>
         </div>
         <div class="panel panel-default">
-            <!-- Default panel contents -->
-            <div class="panel-heading">{{ title }} Information</div>
-            <div class="panel-body">
+            <div class="panel-heading">{{ title }}</div>
+            <!-- <div class="panel-body">
                 <p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum
                     nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis
                     vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </div>
+            </div> -->
 
-            <!-- Table -->
             <table class="table">
                 <thead>
                 <tr>
-                    <th>id</th>
-                    <th>name</th>
-                    <th>description</th>
-                    <th>catalog</th>
-                    <th>ask_price</th>
-                    <th>inventory_quantity</th>
+                    <th>ID</th>
+                    <th>商品名称</th>
+                    <th>商品描述</th>
+                    <th>商品类别</th>
+                    <th>商品价格</th>
+                    <th>库存数量</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for obj in inventory_items %}
                     <tr>
                         <td>{{ obj.id }}</td>
-                        <td>{{ obj.name }}</td>
+                        <td>{{ obj.items_name }}</td>
                         <td>{{ obj.description}}</td>
                         <td>{{ obj.catalog}}</td>
-                        <td>{{ obj.ask_price }}</td>
+                        <td>{{ obj.sell_price }}</td>
                         <td>{{ obj.inventory_quantity  }}</td>
                     </tr>
                 {% endfor %}

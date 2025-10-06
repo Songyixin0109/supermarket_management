@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.core.validators import MinValueValidator
 
 
 class AuthGroup(models.Model):
@@ -109,11 +110,15 @@ class DjangoSession(models.Model):
 
 
 class EmployeeInfo(models.Model):
-    id = models.CharField(primary_key=True, max_length=32)
-    password = models.CharField(max_length=32)
-    name = models.CharField(max_length=32, blank=True, null=True)
-    sex = models.CharField(max_length=2, blank=True, null=True)
-    position = models.CharField(max_length=16, blank=True, null=True)
+    GENDER_CHOICES = (
+        ('M', '男'),
+        ('F', '女')
+        )
+    employeename = models.CharField('员工名', max_length=16, unique=True)
+    password = models.CharField('密码', max_length=32)
+    gender = models.CharField('性别', max_length=1, choices=GENDER_CHOICES,default='F')
+    phone = models.CharField('电话号码', max_length=20)
+    position = models.CharField('部门',max_length=16, blank=True, null=True)
 
     class Meta:
         # managed = False
@@ -121,11 +126,12 @@ class EmployeeInfo(models.Model):
 
 
 class InventoryItems(models.Model):
-    name = models.CharField(max_length=32, blank=True, null=True)
-    description = models.CharField(max_length=255, blank=True, null=True)
-    catalog = models.CharField(max_length=255, blank=True, null=True)
-    ask_price = models.DecimalField(max_digits=10, decimal_places=2)
-    inventory_quantity = models.IntegerField()
+    """库存商品"""
+    items_name = models.CharField('商品名', max_length=100)
+    description = models.TextField('描述', blank=True, null=True)
+    category = models.CharField('类别', max_length=255)
+    sell_price = models.DecimalField('价格', max_digits=10, decimal_places=2,validators=[MinValueValidator(0)])
+    Inventory_quantity = models.IntegerField('库存数量', validators=[MinValueValidator(0)])
 
     class Meta:
         # managed = False
@@ -135,11 +141,11 @@ class InventoryItems(models.Model):
         return self.name
 
 class MerchantInfo(models.Model):
-    name = models.CharField(max_length=32)
-    password = models.CharField(max_length=255)
-    phone = models.CharField(max_length=16, blank=True, null=True)
-    email = models.CharField(max_length=32, blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
+    """商家"""
+    merchant_name = models.CharField('商家名称',max_length=32)
+    phone = models.CharField('联系电话',max_length=16)
+    email = models.CharField('联系邮箱',max_length=32, blank=True, null=True)
+    address = models.CharField('联系地址',max_length=255)
 
     class Meta:
         # managed = False
@@ -181,7 +187,7 @@ class SellOrders(models.Model):
     user = models.ForeignKey('UserInfo', models.DO_NOTHING)
     inventory_items = models.ForeignKey(InventoryItems, models.DO_NOTHING)
     order_quantity = models.IntegerField()
-    order_data =  models.TimeField(blank=True, null=True)
+    order_date =  models.TimeField(blank=True, null=True)
 
     class Meta:
         # managed = False
@@ -189,12 +195,17 @@ class SellOrders(models.Model):
 
 
 class UserInfo(models.Model):
-    username = models.CharField(max_length=32)
-    password = models.CharField(max_length=32)
-    name = models.CharField(max_length=16, blank=True, null=True)
-    sex = models.CharField(max_length=2, blank=True, null=True)
-    phone = models.CharField(max_length=16, blank=True, null=True)
-    email = models.CharField(max_length=32, blank=True, null=True)
+    """用户"""
+    GENDER_CHOICES = (
+        ('M', '男'),
+        ('F', '女')
+        )
+    username = models.CharField('用户名', max_length=16, unique=True)
+    password = models.CharField('密码', max_length=32)
+    name = models.CharField('姓名', max_length=32, blank=True, null=True)
+    gender = models.CharField('性别', max_length=1, choices=GENDER_CHOICES,default='F')
+    phone = models.CharField('电话号码', max_length=20)
+    email = models.EmailField('邮箱', blank=True, null=True)
 
     class Meta:
         # managed = False

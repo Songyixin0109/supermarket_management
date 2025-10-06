@@ -30,13 +30,13 @@ class UserInfoModelForm(BootStrapModelForm):
         widget=forms.PasswordInput(render_value=True))
     class Meta:
         model = models.UserInfo
-        fields = ['username', 'password', 'name', 'sex', 'phone', 'email']
+        fields = ['username', 'password', 'name', 'gender', 'phone', 'email']
         labels = {
             'username': '用户名',
             'password': '密码',
             'name': '姓名',
-            'sex': '性别',
-            'phone': '电话',
+            'gender': '性别',
+            'phone': '电话号码',
             'email': '邮箱',
         }
 

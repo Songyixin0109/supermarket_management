@@ -28,7 +28,7 @@ def inventory_info_admin(request):
         page_object = Pagination(request, queryset)
         form = InventoryItemsInfoModelForm()
 
-        title = 'inventory items'
+        title = '库存商品'
         context = {'form': form,
                    'inventory_items': page_object.page_queryset,
                    'title': title,
@@ -47,7 +47,7 @@ def inventory_info_user(request):
         page_object = Pagination(request, queryset)
         form = InventoryItemsInfoModelForm()
 
-        title = 'inventory items'
+        title = '商品列表'
         context = {'form': form,
                    'inventory_items': page_object.page_queryset,
                    'title': title,

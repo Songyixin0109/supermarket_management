@@ -14,7 +14,7 @@ Django+MySQL+HTML+CSS+JS
 1. 确保已安装Python和MySQL数据库。
 2. 克隆项目到本地。
 3. 在项目根目录下运行`pip install -r requirements.txt`安装依赖。
-4. 在MySQL中创建数据库，并运行`python manage.py migrate`创建数据库表。
+4. 在MySQL中创建数据库，并运行`python manage.py makemigrations`和`python manage.py migrate`创建数据库表。
 5. 运行`python manage.py runserver`启动Django开发服务器。
 6. 在浏览器中访问`http://localhost:8000`即可使用网站。
 
@@ -36,6 +36,9 @@ Django+MySQL+HTML+CSS+JS
 - [HTML](https://www.w3.org/html/)
 - [CSS](https://www.w3.org/Style/CSS/)
 - [JavaScript](https://www.ecma-international.org/)
+- [jQuery](https://jquery.com/)
+- [Bootstrap](https://v3.bootcss.com/)
+- [Glyphicons Halflings](https://www.glyphicons.com/)
 
 # 注意事项
 - 本项目仅供学习和参考，请勿用于商业用途。

@@ -14,24 +14,22 @@
             </form>
         </div>
         <div class="panel panel-default">
-            <!-- Default panel contents -->
-            <div class="panel-heading">{{ title }} Information</div>
-            <div class="panel-body">
+            <div class="panel-heading">{{ title }}</div>
+            <!-- <div class="panel-body">
                 <p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum
                     nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis
                     vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </div>
+            </div> -->
 
-            <!-- Table -->
             <table class="table">
                 <thead>
                 <tr>
-                    <th>id</th>
-                    <th>user_id</th>
-                    <th>inventory_items_id</th>
-                    <th>order_quantity</th>
-                    <th>order_data</th>
-                    <th>Operation</th>
+                    <th>ID</th>
+                    <th>用户ID</th>
+                    <th>商品名称</th>
+                    <th>订单数量</th>
+                    <th>订单日期</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,11 +37,11 @@
                     <tr>
                         <td>{{ obj.id }}</td>
                         <td>{{ obj.user.username }}</td>
-                        <td>{{ obj.inventory_items.name }}</td>
+                        <td>{{ obj.inventory_items.items_name }}</td>
                         <td>{{ obj.order_quantity }}</td>
-                        <td>{{ obj.order_data}}</td>
+                        <td>{{ obj.order_date}}</td>
                         <td>
-                            <a class="btn btn-danger btn-xs" href="/sellorder/delete/admin/{{ obj.id }}/">delete</a>
+                            <a class="btn btn-danger btn-xs" href="/sellorder/delete/admin/{{ obj.id }}/">删 除</a>
                         </td>
                     </tr>
                 {% endfor %}
