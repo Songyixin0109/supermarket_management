@@ -138,7 +138,7 @@ class InventoryItems(models.Model):
         db_table = 'inventory_items'
 
     def __str__(self):
-        return self.name
+        return self.items_name
 
 class MerchantInfo(models.Model):
     """商家"""

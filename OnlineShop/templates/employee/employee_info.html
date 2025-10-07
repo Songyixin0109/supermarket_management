@@ -2,9 +2,9 @@
 {% block content %}
 <div class="container">
     <div style="margin-bottom: 10px">
-        <a class="btn btn-success" href="/admin/register/">
+        <a class="btn btn-success" href="/employee/register/">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            新建管理员
+            新建员工
         </a>
     </div>
 
@@ -36,20 +36,26 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>用户名</th>
+                    <th>员工名</th>
                     <th>密码</th>
+                    <th>性别</th>
+                    <th>电话</th>
+                    <th>部门</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tbody>
-                {% for obj in admin_list %}
+                {% for obj in employee_list %}
                 <tr>
                     <td>{{ obj.id }}</td>
-                    <td>{{ obj.username }}</td>
+                    <td>{{ obj.employeename }}</td>
                     <td>********</td>
+                    <td>{{ obj.get_gender_display }}</td>
+                    <td>{{ obj.phone }}</td>
+                    <td>{{ obj.position }}</td>
                     <td>
-                        <a class="btn btn-primary btn-xs" href="/admin/edit/{{ obj.id }}">编 辑</a>
-                        <a class="btn btn-danger btn-xs" href="/admin/delete/{{ obj.id }}">删 除</a>
+                        <a class="btn btn-primary btn-xs" href="/employee/edit/{{ obj.id }}">编 辑</a>
+                        <a class="btn btn-danger btn-xs" href="/employee/delete/{{ obj.id }}">删 除</a>
                     </td>
                 </tr>
                 {% endfor %}

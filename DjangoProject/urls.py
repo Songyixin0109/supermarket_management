@@ -17,7 +17,7 @@ Including another URLconf
 # from django.contrib import admin
 from django.urls import path
 from OnlineShop import view
-from OnlineShop.views import user, admin, account, order, inventory
+from OnlineShop.views import user, admin, employee,account, order, inventory
 
 urlpatterns = [
     #    path('admin/', admin.site.urls),
@@ -34,6 +34,12 @@ urlpatterns = [
     path('admin/register/',admin.admin_register, name='admin_registration'),
     path('admin/edit/<int:nid>/',admin.admin_edit,name='admin_edit'),
     path('admin/delete/<int:nid>/',admin.admin_delete,name='admin_delete'),
+
+    #员工管理
+    path('employee/info/', employee.employee_info, name='employee_info'),
+    path('employee/register/',employee.employee_register, name='employee_registration'),
+    path('employee/edit/<int:nid>/',employee.employee_edit,name='employee_edit'),
+    path('employee/delete/<int:nid>/',employee.employee_delete,name='employee_delete'),
 
     #登录注销
     path('admin/login/',account.admin_login,name='admin_login'),

@@ -1,16 +1,16 @@
 {% extends 'layout/layout_admin.html' %}
 {% block content %}
 <div class="container">
-    <div style="margin-bottom: 10px">
+    <!-- <div style="margin-bottom: 10px">
         <a class="btn btn-success" href="/user/register/">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             新建用户
         </a>
-    </div>
+    </div> -->
 
     <div style="float: right;width: 300px">
         <form method="get">
-            <div class="input-group">
+            <div class="input-group" style="margin-top: 3px;">
                 <input type="text" name="search_data" class="form-control" placeholder="搜索..."
                     value="{{ search_data }}">
                 <span class="input-group-btn">
@@ -48,7 +48,7 @@
                     <td>{{ obj.username }}</td>
                     <td>********</td>
                     <td>{{ obj.name }}</td>
-                    <td>{{ obj.gender }}</td>
+                    <td>{{ obj.get_gender_display }}</td>
                     <td>{{ obj.phone }}</td>
                     <td>{{ obj.email }}</td>
                     <td>
