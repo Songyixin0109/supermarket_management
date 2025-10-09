@@ -1,6 +1,21 @@
-{% extends 'layout/layout_user.html' %}
+{% extends 'layout/layout_employee.html' %}
 {% block content %}
 <div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            {{ title }}
+        </div>
+        <div class="panel-body">
+            <form method="post" enctype="multipart/form-data" action="/inventory/upload/">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="file" name="excel">
+                </div>
+                <input type="submit" value="上传" class="btn btn-info">
+            </form>
+        </div>
+    </div>
     <div class="search-bar">
         <div style="float: right;width: 300px">
             <form method="get">
@@ -17,9 +32,8 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
             {{ title }}
-
         </div>
         <!-- <div class="panel-body">
                 <p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum
@@ -36,6 +50,7 @@
                     <th>商品类别</th>
                     <th>商品价格</th>
                     <th>库存数量</th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,9 +62,14 @@
                     <td>{{ item.items_name.catalog|default:"未分类" }}</td>
                     <td>¥{{ item.sell_price }}</td>
                     <td>{{ item.inventory_quantity }}</td>
+                    <td>
+                        <a class="btn btn-danger btn-xs" href="/inventory/delete/{{ item.id }}/">删 除</a>
+                    </td>
                 </tr>
                 {% empty %}
-                <td colspan="6" class="text-center text-muted">暂无库存商品</td>
+                <tr>
+                    <td colspan="7" class="text-center text-muted">暂无库存商品</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>

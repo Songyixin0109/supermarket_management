@@ -114,31 +114,28 @@ class EmployeeInfo(models.Model):
         ('M', '男'),
         ('F', '女')
         )
-    employeename = models.CharField('员工名', max_length=16, unique=True)
+    employee_name = models.CharField('员工名', max_length=16, unique=True)
     password = models.CharField('密码', max_length=32)
     gender = models.CharField('性别', max_length=1, choices=GENDER_CHOICES,default='F')
     phone = models.CharField('电话号码', max_length=20)
-    position = models.CharField('部门',max_length=16, blank=True, null=True)
+
+    position_choices = (
+        (1,'销售员'),
+        (2,'经理'),
+        (3,'会计'),
+        (4,'采购员'),
+        (5,'技术员'),
+        (6,'售后'),
+        (7,'其他')
+    )
+
+    position = models.SmallIntegerField('部门',choices=position_choices,default=1)
+    
 
     class Meta:
         # managed = False
         db_table = 'employee_info'
 
-
-class InventoryItems(models.Model):
-    """库存商品"""
-    items_name = models.CharField('商品名', max_length=100)
-    description = models.TextField('描述', blank=True, null=True)
-    category = models.CharField('类别', max_length=255)
-    sell_price = models.DecimalField('价格', max_digits=10, decimal_places=2,validators=[MinValueValidator(0)])
-    Inventory_quantity = models.IntegerField('库存数量', validators=[MinValueValidator(0)])
-
-    class Meta:
-        # managed = False
-        db_table = 'inventory_items'
-
-    def __str__(self):
-        return self.items_name
 
 class MerchantInfo(models.Model):
     """商家"""
@@ -151,31 +148,45 @@ class MerchantInfo(models.Model):
         # managed = False
         db_table = 'merchant_info'
 
-
-class MerchantItems(models.Model):
-    id = models.IntegerField(primary_key=True)
-    merchant = models.ForeignKey(MerchantInfo, models.DO_NOTHING)
-    purchase_items = models.ForeignKey('PurchaseItems', models.DO_NOTHING)
-    purchase_price = models.DecimalField(max_digits=10, decimal_places=2)
-
-    class Meta:
-        # managed = False
-        db_table = 'merchant_items'
-
-
 class PurchaseItems(models.Model):
-    name = models.CharField(max_length=32, blank=True, null=True)
-    description = models.CharField(max_length=255, blank=True, null=True)
-    catalog = models.CharField(max_length=255, blank=True, null=True)
+    """商品描述"""
+    name = models.CharField('商品名称',max_length=32, unique=True)
+    description = models.CharField('商品描述',max_length=255, blank=True, null=True)
+    catalog = models.CharField('分类',max_length=255, blank=True, null=True)
 
     class Meta:
         # managed = False
         db_table = 'purchase_items'
 
 
+class MerchantItems(models.Model):
+    """商家商品"""
+    merchant = models.ForeignKey(MerchantInfo, models.DO_NOTHING)
+    merchant_items = models.ForeignKey(PurchaseItems, models.DO_NOTHING)
+    merchant_price = models.DecimalField('进货价',max_digits=10, decimal_places=2)
+
+    class Meta:
+        # managed = False
+        db_table = 'merchant_items'
+
+
+class InventoryItems(models.Model):
+    """库存商品"""
+    items_name = models.ForeignKey(PurchaseItems, models.DO_NOTHING)
+    sell_price = models.DecimalField('销售价', max_digits=10, decimal_places=2,validators=[MinValueValidator(0)])
+    Inventory_quantity = models.IntegerField('库存数量', validators=[MinValueValidator(0)])
+
+    class Meta:
+        # managed = False
+        db_table = 'inventory_items'
+
+    def __str__(self):
+        return self.items_name
+
+
 class PurchaseOrders(models.Model):
     merchant_items = models.ForeignKey(MerchantItems, models.DO_NOTHING)
-    purchase_quantity = models.IntegerField()
+    purchase_quantity = models.IntegerField('进货数量', validators=[MinValueValidator(0)])
     employee = models.ForeignKey(EmployeeInfo, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
@@ -188,6 +199,14 @@ class SellOrders(models.Model):
     inventory_items = models.ForeignKey(InventoryItems, models.DO_NOTHING)
     order_quantity = models.IntegerField()
     order_date =  models.TimeField(blank=True, null=True)
+
+    status_choices = (
+        (1,'未完成'),
+        (2,'已完成'),
+        (3,'已取消')
+    )
+
+    status = models.SmallIntegerField('状态',choices=status_choices,default=1)
 
     class Meta:
         # managed = False

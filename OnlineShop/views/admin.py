@@ -65,7 +65,7 @@ def admin_register(request):
         form = AdminModelForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return redirect('/admin/info/')
         else:
             return render(request, 'register_edit.html', {'form':form, 'title':title})
 

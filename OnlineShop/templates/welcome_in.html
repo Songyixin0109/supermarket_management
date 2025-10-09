@@ -1,0 +1,73 @@
+{% extends "layout/layout_"|add:request.session.info.role|add:".html" %} <!-- 动态选布局 -->
+{% load static %}
+
+{% block css %}
+<style>
+    .navbar.navbar-default {
+        margin-bottom: 0 ;
+        /* 去掉空隙，贴顶 */
+    }
+
+    .welcome-area {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 80px 40px 40px;
+        /* 上留白，偏上 */
+        color: #fff;
+        text-align: center;
+        /* 左右居中 */
+    }
+
+    .welcome-area h1 {
+        font-size: 5.5rem;
+        margin: 0 0 1rem;
+        letter-spacing: 1px;
+    }
+
+    .welcome-area p {
+        font-size: 3rem;
+        margin: 0 0 2rem;
+    }
+
+    .btn-glow {
+        display: inline-block;
+        padding: .75rem 2rem;
+        border-radius: 50px;
+        background: #ff7eb3;
+        color: #fff;
+        text-decoration: none;
+        transition: all .3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
+    }
+
+    /* 彻底禁止 hover 变色与下划线 */
+    .btn-glow,
+    .btn-glow:hover,
+    .btn-glow:active,
+    .btn-glow:visited {
+        color: #fff !important;
+        text-decoration: none !important;
+    }
+
+    .btn-glow:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, .3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="welcome-area">
+    <h1>欢迎 {{ request.session.info.username }} 使用本网站</h1>
+    <p id="now"></p>
+    <a class="btn-glow" href="/logout">退出登录</a>
+</div>
+
+<script>
+    function updateTime() {
+        document.getElementById('now').textContent = '现在是 ' + new Date().toLocaleString('zh-CN');
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+</script>
+{% endblock %}

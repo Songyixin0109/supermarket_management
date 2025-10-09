@@ -13,7 +13,7 @@ from OnlineShop.utils.pagination import Pagination
 
 # Create your views here.
 def user_info(request):
-    """展示用户信息"""
+    title='用户信息'
     data_dict={}
     search_data = request.GET.get('search_data','')
     print(search_data)
@@ -22,6 +22,7 @@ def user_info(request):
     queryset = models.UserInfo.objects.filter(**data_dict)
     page_object=Pagination(request,queryset)
     context = {'user_list': page_object.page_queryset,
+               'title':title,
                'search_data':search_data,
                'page_string':page_object.html()}
     return render(request, 'user/user_info.html', context)

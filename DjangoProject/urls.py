@@ -22,6 +22,7 @@ from OnlineShop.views import user, admin, employee,account, order, inventory
 urlpatterns = [
     #    path('admin/', admin.site.urls),
     path('', view.welcome, name='welcome'),
+    path('welcome/',view.welcome_in,name='welcome_in'),
     #用户管理
     path('user/info/', user.user_info, name='user_info'),
     path('user/register/',user.user_register, name='user_registration'),
@@ -44,11 +45,13 @@ urlpatterns = [
     #登录注销
     path('admin/login/',account.admin_login,name='admin_login'),
     path('user/login/',account.user_login,name='user_login'),
+    path('employee/login/',account.employee_login,name='employee_login'),
     path('logout/',account.logout,name='logout'),
 
     #订单管理
     path('sellorder/info/admin/',order.sellorder_info_admin, name='sellorder_info_admin'),
     path('sellorder/info/user/',order.sellorder_info_user, name='sellorder_info_user'),
+    path('sellorder/info/employee/',order.sellorder_info_employee, name='sellorder_info_employee'),
     path('sellorder/add/',order.sellorder_add, name='sellorder_add'),
     path('sellorder/delete/admin/<int:nid>/',order.sellorder_delete_admin, name='sellorder_delete_admin'),
     path('sellorder/delete/user/<int:nid>/',order.sellorder_delete_user, name='sellorder_delete_user'),
@@ -56,6 +59,7 @@ urlpatterns = [
     #库存管理
     path('inventory/info/admin/', inventory.inventory_info_admin, name='inventory_info_admin'),
     path('inventory/info/user/', inventory.inventory_info_user, name='inventory_info_user'),
+    path('inventory/info/employee/', inventory.inventory_info_employee, name='inventory_info_employee'),
     path('inventory/delete/<int:nid>/',inventory.inventory_delete,name='inventory_delete'),
     path('inventory/statistics/',inventory.inventory_statistics, name='inventory_statistics'),
     path('inventory/chart/',inventory.inventory_chart, name='inventory_chart'),

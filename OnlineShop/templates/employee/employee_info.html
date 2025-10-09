@@ -7,19 +7,20 @@
             新建员工
         </a>
     </div>
-
-    <div style="float: right;width: 300px"> 
-        <form method="get">
-            <div class="input-group" style="margin-top: 3px;">
-                <input type="text" name="search_data" class="form-control" placeholder="搜索..."
-                    value="{{ search_data }}">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="submit">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                    </button>
-                </span>
-            </div>
-        </form>
+    <div class="search-bar">
+        <div style="float: right;width: 300px">
+            <form method="get">
+                <div class="input-group">
+                    <input type="text" name="search_data" class="form-control" placeholder="搜索..."
+                        value="{{ search_data }}">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -48,7 +49,7 @@
                 {% for obj in employee_list %}
                 <tr>
                     <td>{{ obj.id }}</td>
-                    <td>{{ obj.employeename }}</td>
+                    <td>{{ obj.employee_name }}</td>
                     <td>********</td>
                     <td>{{ obj.get_gender_display }}</td>
                     <td>{{ obj.phone }}</td>

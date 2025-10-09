@@ -6,7 +6,6 @@ from django import forms
 from django.contrib.auth.hashers import make_password
 
 from OnlineShop import models
-from OnlineShop.models import EmployeeInfo
 from OnlineShop.utils.bootstrap import BootStrapModelForm
 from OnlineShop.utils.encrypt import md5
 from OnlineShop.utils.pagination import Pagination
@@ -40,9 +39,9 @@ class EmployeeInfoModelForm(BootStrapModelForm):
         ])
     class Meta:
         model = models.EmployeeInfo
-        fields = ['employeename', 'password',  'gender', 'phone', 'position']
+        fields = ['employee_name', 'password',  'gender', 'phone', 'position']
         labels = {
-            'employeename': '员工名',
+            'employee_name': '员工名',
             'password': '密码',
             'gender': '性别',
             'phone': '电话',
@@ -65,11 +64,11 @@ class EmployeeInfoModelForm(BootStrapModelForm):
             raise forms.ValidationError('两次密码输入不一致')
         return confirm_password
     def clean_employeename(self):
-        employeename = self.cleaned_data.get('employeename')
-        exist = models.EmployeeInfo.objects.filter(employeename=employeename).exists()
+        employee_name = self.cleaned_data.get('employee_name')
+        exist = models.EmployeeInfo.objects.filter(employee_name=employee_name).exists()
         if exist:
             raise ValidationError("用户名已存在")
-        return employeename
+        return employee_name
 def employee_register(request):
     title='新建员工'
     if request.method == "GET":
@@ -79,13 +78,13 @@ def employee_register(request):
         form = EmployeeInfoModelForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return redirect('/admin/info/')
         else:
             return render(request, 'register_edit.html', {'form': form, 'title': title})
 class EmployeeInfoEditModelForm(BootStrapModelForm):
     class Meta:
         model = models.EmployeeInfo
-        exclude = 'employeename',
+        exclude = 'employee_name',
         labels = {
             'password': '密码',
             'gender': '性别',
