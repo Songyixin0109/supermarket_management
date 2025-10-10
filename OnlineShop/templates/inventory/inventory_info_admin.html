@@ -1,4 +1,4 @@
-{% extends 'layout/layout_admin.html' %}
+{% extends "layout/layout_"|add:request.session.info.role|add:".html" %}
 {% block content %}
 <div class="container">
     <!-- <div class="panel panel-default">
@@ -63,7 +63,7 @@
                     <td>¥{{ item.sell_price }}</td>
                     <td>{{ item.inventory_quantity }}</td>
                     <td>
-                        <a class="btn btn-danger btn-xs" href="/inventory/delete/{{ item.id }}/">删 除</a>
+                        <a class="btn btn-c-danger btn-xs" href="/inventory/delete/{{ item.id }}/">删 除</a>
                     </td>
                 </tr>
                 {% empty %}

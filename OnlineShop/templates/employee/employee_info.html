@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
     <div style="margin-bottom: 10px">
-        <a class="btn btn-success" href="/employee/register/">
+        <a class="btn btn-c-success" href="/employee/register/">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             新建员工
         </a>
@@ -55,8 +55,8 @@
                     <td>{{ obj.phone }}</td>
                     <td>{{ obj.position }}</td>
                     <td>
-                        <a class="btn btn-primary btn-xs" href="/employee/edit/{{ obj.id }}">编 辑</a>
-                        <a class="btn btn-danger btn-xs" href="/employee/delete/{{ obj.id }}">删 除</a>
+                        <a class="btn btn-c-primary btn-xs" href="/employee/edit/{{ obj.id }}">编 辑</a>
+                        <a class="btn btn-c-danger btn-xs" href="/employee/delete/{{ obj.id }}">删 除</a>
                     </td>
                 </tr>
                 {% endfor %}

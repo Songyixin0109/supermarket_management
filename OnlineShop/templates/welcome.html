@@ -1,11 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <title>注册和登录页面</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
     <style>
-
         html,
         body {
             height: 100%;
@@ -13,11 +14,18 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) no-repeat center/cover fixed;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
                 "Helvetica Neue", Arial, sans-serif;
             color: #fff;
-            padding-top: 10vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 15vh;
         }
 
         .wrap {
@@ -66,14 +74,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
         }
 
-        .btn-user {
-            background: #ff7eb3;
-        }
-
-        .btn-admin {
-            background: #7cc7ff;
-        }
-
         .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, .3);
@@ -83,14 +83,14 @@
 
 <body>
     <div class="wrap">
-        <h1 class="title">欢迎来访</h1>
+        <h1 class="title">欢迎来访OnlineShop</h1>
         <p class="subtitle">请选择以下选项进行注册或登录：</p>
 
         <div class="btn-group">
-            <a class="btn btn-user" href="/user/register">用户注册</a>
-            <a class="btn btn-admin" href="/employee/login/">员工登录</a>
-            <a class="btn btn-user" href="/user/login">用户登录</a>
-            <a class="btn btn-admin" href="/admin/login">管理员登录</a>
+            <a class="btn btn-c-danger " href="/user/register">用户注册</a>
+            <a class="btn btn-c-primary" href="/employee/login/">员工登录</a>
+            <a class="btn btn-c-danger " href="/user/login">用户登录</a>
+            <a class="btn btn-c-primary" href="/admin/login">管理员登录</a>
         </div>
     </div>
 

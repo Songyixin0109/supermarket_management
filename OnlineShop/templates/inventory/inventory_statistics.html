@@ -1,4 +1,4 @@
-{% extends 'layout/layout_admin.html' %}
+{% extends "layout/layout_"|add:request.session.info.role|add:".html" %}
 {% load static %}
 {% block content %}
     <div class="container">

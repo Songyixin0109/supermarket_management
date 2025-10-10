@@ -87,6 +87,31 @@
 }
 .search-bar .input-group .btn:hover { background: #f1f1f1; }
 
+/* .btn-s {         
+  display:inline-block; padding:6px 12px; margin-bottom:0;
+  font-size:14px; line-height:1.42857143; text-align:center;
+  white-space:nowrap; vertical-align:middle; cursor:pointer;
+  border:1px solid transparent; border-radius:4px;
+  transition:background .3s;
+} */
+
+.btn-c-primary { background:#7cc7ff; border-color:#7cc7ff; color:#fff; }
+.btn-c-primary:hover { background:#5ab5f5; border-color:#5ab5f5; color:#fff; }
+
+.btn-c-danger  { background:#ff7eb3; border-color:#ff7eb3; color:#fff; }
+.btn-c-danger:hover  { background:#ff66a0; border-color:#ff66a0;color:#fff;  }
+
+.btn-c-success { background:#66d9a9d1; border-color:#66d9a9d1; color:#fff; }
+.btn-c-success:hover { background:#4cc092e6; border-color:#4cc092e6; color:#fff; }
+
+/* 重置 a 标签默认色/背景 */
+.btn-c-primary,
+.btn-c-danger,
+.btn-c-success {
+  background-image: none;        /* 去掉透明渐变 */
+  color: #fff;                   /* 统一白字 */
+  text-decoration: none;         /* 去掉下划线 */
+}
 
 
 

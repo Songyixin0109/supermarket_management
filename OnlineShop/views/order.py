@@ -58,24 +58,6 @@ def sellorder_info_user(request):
             'search_data': search_data,
             'page_string': page_object.html()}
         return render(request, 'order/sellorder_info_user.html', context)
-    
-def sellorder_info_employee(request):
-    if request.method == 'GET':
-        data_dict = {}
-        search_data = request.GET.get('search_data', '')
-        if search_data:
-            data_dict['id'] = search_data
-        queryset = models.SellOrders.objects.filter(**data_dict).select_related('user', 'inventory_items')
-        page_object = Pagination(request, queryset)
-        form = SellOrderInfoModelForm()
-        title = '所有订单'
-        context = {
-            'form': form,
-            'sell_orders': page_object.page_queryset,
-            'title': title,
-            'search_data': search_data,
-            'page_string': page_object.html()}
-        return render(request, 'order/sellorder_info_employee.html', context)
 
 def sellorder_delete_admin(request, nid):
     models.SellOrders.objects.get(id=nid).delete()

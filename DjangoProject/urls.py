@@ -17,7 +17,7 @@ Including another URLconf
 # from django.contrib import admin
 from django.urls import path
 from OnlineShop import view
-from OnlineShop.views import user, admin, employee,account, order, inventory
+from OnlineShop.views import user, admin, employee,account, order, inventory, merchant
 
 urlpatterns = [
     #    path('admin/', admin.site.urls),
@@ -28,7 +28,7 @@ urlpatterns = [
     path('user/register/',user.user_register, name='user_registration'),
     path('user/edit/<int:nid>/',user.user_edit,name='user_edit'),
     path('user/delete/<int:nid>/',user.user_delete,name='user_delete'),
-    path('user/index/',user.user_index,name='user_index'),
+    # path('user/index/',user.user_index,name='user_index'),
 
     #管理员管理
     path('admin/info/', admin.admin_info, name='admin_info'),
@@ -51,7 +51,6 @@ urlpatterns = [
     #订单管理
     path('sellorder/info/admin/',order.sellorder_info_admin, name='sellorder_info_admin'),
     path('sellorder/info/user/',order.sellorder_info_user, name='sellorder_info_user'),
-    path('sellorder/info/employee/',order.sellorder_info_employee, name='sellorder_info_employee'),
     path('sellorder/add/',order.sellorder_add, name='sellorder_add'),
     path('sellorder/delete/admin/<int:nid>/',order.sellorder_delete_admin, name='sellorder_delete_admin'),
     path('sellorder/delete/user/<int:nid>/',order.sellorder_delete_user, name='sellorder_delete_user'),
@@ -59,9 +58,14 @@ urlpatterns = [
     #库存管理
     path('inventory/info/admin/', inventory.inventory_info_admin, name='inventory_info_admin'),
     path('inventory/info/user/', inventory.inventory_info_user, name='inventory_info_user'),
-    path('inventory/info/employee/', inventory.inventory_info_employee, name='inventory_info_employee'),
     path('inventory/delete/<int:nid>/',inventory.inventory_delete,name='inventory_delete'),
     path('inventory/statistics/',inventory.inventory_statistics, name='inventory_statistics'),
     path('inventory/chart/',inventory.inventory_chart, name='inventory_chart'),
     path('inventory/upload/',inventory.inventory_upload,name='inventory_upload'),
+
+    #商家管理
+    path('merchant/info/', merchant.merchant_info, name='merchant_info'),
+    path('merchant/add/', merchant.merchant_add, name='merchant_add'),
+    # path('merchant/edit/<int:nid>/', merchant.merchant_edit, name='merchant_edit'),
+    # path('merchant/delete/<int:nid>/', merchant.merchant_delete, name='merchant_delete'),
 ]

@@ -1,0 +1,73 @@
+{% extends "layout/layout_"|add:request.session.info.role|add:".html" %}
+{% block content %}
+<div class="container">
+  <div style="margin-bottom: 10px">
+    <a class="btn btn-c-success" href="#">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      新建商家
+    </a>
+  </div>
+  <div class="search-bar">
+    <div style="float: right;width: 300px">
+      <form method="get">
+        <div class="input-group">
+          <input type="text" name="search_data" class="form-control" placeholder="搜索..." value="{{ search_data }}">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </button>
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+      {{ title }}
+    </div>
+    <!-- <div class="panel-body">
+                <p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum
+                    nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis
+                    vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            </div> -->
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>商家名</th>
+          <th>联系电话</th>
+          <th>联系邮箱</th>
+          <th>联系地址</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for obj in merchant_list %}
+        <tr>
+          <td>{{ obj.id }}</td>
+          <td>{{ obj.merchant_name }}</td>
+          <td>{{ obj.phone }}</td>
+          <td>{{ obj.email }}</td>
+          <td>{{ obj.address }}</td>
+          <td>
+            <a class="btn btn-c-primary btn-xs" href="#">编 辑</a>
+            <a class="btn btn-c-danger btn-xs" href="#">删 除</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center text-muted">暂无商家数据</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      {{ page_string }}
+    </ul>
+  </nav>
+</div>
+{% endblock %}
