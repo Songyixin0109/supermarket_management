@@ -126,10 +126,10 @@ class EmployeeInfo(models.Model):
         (4,'采购员'),
         (5,'技术员'),
         (6,'售后'),
-        (7,'其他')
+        (7,'其他') #仓库管理员
     )
 
-    position = models.SmallIntegerField('部门',choices=position_choices,default=1)
+    position = models.SmallIntegerField('职位',choices=position_choices,default=1)
     
 
     class Meta:
@@ -161,8 +161,8 @@ class PurchaseItems(models.Model):
 
 class MerchantItems(models.Model):
     """商家商品"""
-    merchant = models.ForeignKey(MerchantInfo, models.DO_NOTHING)
-    merchant_items = models.ForeignKey(PurchaseItems, models.DO_NOTHING)
+    merchant = models.ForeignKey(MerchantInfo, on_delete=models.CASCADE)
+    merchant_items = models.ForeignKey(PurchaseItems,on_delete=models.CASCADE,related_name='merchant_items_set' )
     merchant_price = models.DecimalField('进货价',max_digits=10, decimal_places=2)
 
     class Meta:
@@ -172,7 +172,7 @@ class MerchantItems(models.Model):
 
 class InventoryItems(models.Model):
     """库存商品"""
-    items_name = models.ForeignKey(PurchaseItems, models.DO_NOTHING)
+    items_name = models.ForeignKey(PurchaseItems, on_delete=models.CASCADE)
     sell_price = models.DecimalField('销售价', max_digits=10, decimal_places=2,validators=[MinValueValidator(0)])
     Inventory_quantity = models.IntegerField('库存数量', validators=[MinValueValidator(0)])
 
@@ -185,20 +185,37 @@ class InventoryItems(models.Model):
 
 
 class PurchaseOrders(models.Model):
-    merchant_items = models.ForeignKey(MerchantItems, models.DO_NOTHING)
+    merchant_items = models.ForeignKey(
+        MerchantItems,
+        on_delete=models.SET_NULL,   
+        null=True, blank=True
+    )
     purchase_quantity = models.IntegerField('进货数量', validators=[MinValueValidator(0)])
-    employee = models.ForeignKey(EmployeeInfo, models.DO_NOTHING, blank=True, null=True)
+    employee = models.ForeignKey(
+        EmployeeInfo,
+        on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+
+    STATUS_CHOICES = (
+        (1, '待入库'),
+        (2, '已入库'),
+        (3, '已取消'),  
+    )
+    status = models.PositiveSmallIntegerField('状态', choices=STATUS_CHOICES, default=1)
+
+    created_at = models.DateTimeField('创建时间', auto_now_add=True)
+    updated_at = models.DateTimeField('更新时间', auto_now=True)
 
     class Meta:
-        # managed = False
         db_table = 'purchase_orders'
 
 
 class SellOrders(models.Model):
-    user = models.ForeignKey('UserInfo', models.DO_NOTHING)
-    inventory_items = models.ForeignKey(InventoryItems, models.DO_NOTHING)
+    user = models.ForeignKey('UserInfo', on_delete=models.SET_NULL, null=True, blank=True)
+    inventory_items = models.ForeignKey(InventoryItems, on_delete=models.SET_NULL, null=True, blank=True)
     order_quantity = models.IntegerField()
-    order_date =  models.TimeField(blank=True, null=True)
+    order_date =  models.DateTimeField('创建时间', auto_now_add=True)
 
     status_choices = (
         (1,'未完成'),

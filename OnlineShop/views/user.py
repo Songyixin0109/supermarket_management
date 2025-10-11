@@ -35,7 +35,7 @@ class UserInfoModelForm(BootStrapModelForm):
         validators=[
             RegexValidator(
                 regex=r'^1[3-9]\d{9}$',
-                message='手机号码格式错误')
+                message='电话号码格式错误')
         ])
     class Meta:
         model = models.UserInfo
@@ -83,10 +83,12 @@ def user_register(request):
         else:
             return render(request, 'register_edit.html', {'form': form, 'title': title})
 class UserInfoEditModelForm(BootStrapModelForm):
+    username = forms.CharField(label='用户名', disabled=True)
     class Meta:
         model = models.UserInfo
-        exclude = 'username',
+        fields = ['username', 'password', 'name', 'gender', 'phone', 'email']
         labels = {
+            'username': '用户名',
             'password': '密码',
             'name': '姓名',
             'gender': '性别',

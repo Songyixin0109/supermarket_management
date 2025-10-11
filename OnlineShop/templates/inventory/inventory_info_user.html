@@ -34,22 +34,32 @@
                     <th>商品名称</th>
                     <th>商品描述</th>
                     <th>商品类别</th>
-                    <th>商品价格</th>
+                    <th>销售价格</th>
+                    <th>商家</th>
                     <th>库存数量</th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in inventory_items %}
+                {% for inv in inventory_items %}
+                {% for mi in inv.items_name.merchant_items_set.all %}
                 <tr>
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.items_name.name }}</td>
-                    <td>{{ item.items_name.description|default:"无" }}</td>
-                    <td>{{ item.items_name.catalog|default:"未分类" }}</td>
-                    <td>¥{{ item.sell_price }}</td>
-                    <td>{{ item.inventory_quantity }}</td>
+                    <td>{{ inv.id }}</td>
+                    <td>{{ inv.items_name.name }}</td>
+                    <td>{{ inv.items_name.description|default:"无" }}</td>
+                    <td>{{ inv.items_name.catalog|default:"未分类" }}</td>
+                    <td>¥{{ inv.sell_price }}</td>
+                    <td>{{ mi.merchant.merchant_name }}</td>
+                    <td>{{ inv.inventory_quantity }}</td>
                 </tr>
                 {% empty %}
-                <td colspan="6" class="text-center text-muted">暂无库存商品</td>
+                <tr>
+                    <td colspan="7" class="text-center text-muted">暂无商家信息</td>
+                </tr>
+                {% endfor %}
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">暂无库存商品</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>

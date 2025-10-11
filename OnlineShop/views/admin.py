@@ -73,10 +73,13 @@ class AdminEditModelForm(BootStrapModelForm):
     confirm_password = forms.CharField(
         label='确认密码',
         widget=forms.PasswordInput(render_value=True))
+    username = forms.CharField(
+        label='用户名',disabled=True)
     class Meta:
         model = models.Admin
-        exclude = ['username']
+        fields = ['username', 'password']
         labels = {
+            'username': '用户名',
             'password': '新密码',
         }
         widgets = {'password': forms.PasswordInput(render_value=True)}
@@ -92,7 +95,7 @@ class AdminEditModelForm(BootStrapModelForm):
 def admin_edit(request, nid):
     title = '编辑管理员'
     if request.method == "GET":
-        form = AdminEditModelForm()
+        form = AdminEditModelForm(instance=models.Admin.objects.get(id=nid))
         return render(request, 'register_edit.html', {'form': form, 'title': title})
     if request.method == "POST":
         form = AdminEditModelForm(request.POST, instance=models.Admin.objects.get(id=nid))

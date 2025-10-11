@@ -66,6 +66,6 @@ urlpatterns = [
     #商家管理
     path('merchant/info/', merchant.merchant_info, name='merchant_info'),
     path('merchant/add/', merchant.merchant_add, name='merchant_add'),
-    # path('merchant/edit/<int:nid>/', merchant.merchant_edit, name='merchant_edit'),
-    # path('merchant/delete/<int:nid>/', merchant.merchant_delete, name='merchant_delete'),
+    path('merchant/edit/<int:nid>/', merchant.merchant_edit, name='merchant_edit'),
+    path('merchant/delete/<int:nid>/', merchant.merchant_delete, name='merchant_delete'),
 ]

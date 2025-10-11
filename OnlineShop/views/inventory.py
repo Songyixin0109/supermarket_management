@@ -4,12 +4,13 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from django import forms
+from django.db.models import Prefetch,F
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
 
 from OnlineShop import models
-from OnlineShop.models import UserInfo,InventoryItems
+from OnlineShop.models import MerchantItems,InventoryItems
 from OnlineShop.utils.bootstrap import BootStrapModelForm
 from OnlineShop.utils.encrypt import md5
 from OnlineShop.utils.pagination import Pagination
@@ -18,43 +19,50 @@ class InventoryItemsInfoModelForm(forms.ModelForm):
     class Meta:
         model = models.InventoryItems
         fields = '__all__'
+
 def inventory_info_admin(request):
-    if request.method == 'GET':
-        data_dict = {}
-        search_data = request.GET.get('search_data', '')
-        if search_data:
-            data_dict['name__contains'] = search_data
-        queryset = models.InventoryItems.objects.filter(**data_dict)
-        page_object = Pagination(request, queryset)
-        form = InventoryItemsInfoModelForm()
+    search_data = request.GET.get('search_data', '')
+    queryset = InventoryItems.objects.select_related('items_name').prefetch_related(
+        Prefetch(
+            'items_name__merchant_items_set',
+            queryset=MerchantItems.objects.select_related('merchant')
+        )
+    )
 
-        title = '库存商品'
-        context = {'form': form,
-                   'inventory_items': page_object.page_queryset,
-                   'title': title,
-                   'search_data': search_data,
-                   'page_string': page_object.html(), }
+    if search_data:
+        queryset = queryset.filter(items_name__name__icontains=search_data)
 
-        return render(request, 'inventory/inventory_info_admin.html', context)
+    page_object = Pagination(request, queryset)
+
+    context = {
+        'inventory_items': page_object.page_queryset,
+        'title': '库存商品',
+        'search_data': search_data,
+        'page_string': page_object.html(),
+    }
+    return render(request, 'inventory/inventory_info_admin.html', context)
 
 def inventory_info_user(request):
-    if request.method == 'GET':
-        data_dict = {}
-        search_data = request.GET.get('search_data', '')
-        if search_data:
-            data_dict['name__contains'] = search_data
-        queryset = models.InventoryItems.objects.filter(**data_dict)
-        page_object = Pagination(request, queryset)
-        form = InventoryItemsInfoModelForm()
+    search_data = request.GET.get('search_data', '')
+    queryset = InventoryItems.objects.select_related('items_name').prefetch_related(
+        Prefetch(
+            'items_name__merchant_items_set',
+            queryset=MerchantItems.objects.select_related('merchant')
+        )
+    )
 
-        title = '商品列表'
-        context = {'form': form,
-                   'inventory_items': page_object.page_queryset,
-                   'title': title,
-                   'search_data': search_data,
-                   'page_string': page_object.html(), }
+    if search_data:
+        queryset = queryset.filter(items_name__name__icontains=search_data)
 
-        return render(request, 'inventory/inventory_info_user.html', context)
+    page_object = Pagination(request, queryset)
+
+    context = {
+        'inventory_items': page_object.page_queryset,
+        'title': '商品列表',
+        'search_data': search_data,
+        'page_string': page_object.html(),
+    }
+    return render(request, 'inventory/inventory_info_user.html', context)
     
 
 def inventory_delete(request, nid):

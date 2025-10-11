@@ -12,7 +12,6 @@ from django.dispatch import receiver
 
 
 from OnlineShop import models
-from OnlineShop.models import UserInfo
 from OnlineShop.utils.bootstrap import BootStrapModelForm
 from OnlineShop.utils.encrypt import md5
 from OnlineShop.utils.pagination import Pagination
@@ -26,7 +25,7 @@ def sellorder_info_admin(request):
         data_dict = {}
         search_data = request.GET.get('search_data', '')
         if search_data:
-            data_dict['id'] = search_data
+            data_dict['id'] = search_data   #要改
         queryset = models.SellOrders.objects.filter(**data_dict).select_related('user', 'inventory_items')
         page_object = Pagination(request, queryset)
         form = SellOrderInfoModelForm()
@@ -89,3 +88,31 @@ def sell_order_trigger(sender, instance, created, **kwargs):
     if created:
         total_price = instance.order_quantity * instance.inventory_items.ask_price
         print(f"新订单已创建：订单ID {instance.id}, 总金额 {total_price}")
+
+
+#还要细改，，采购单显示商家，商家商品，数量，价格等等
+#商家商品由谁添加我还没想好，实在不行cmd添加，算了 直接改成文件上传吧，假装是商家传给员工的
+#采购单功能，不可编辑和删除，可添加    ====也就是订单功能也要略加修改，用户不可编辑，管理员只可对状态编辑
+
+class PurchaseOrderInfoModelForm(forms.ModelForm):
+    class Meta:
+        model = models.PurchaseOrders
+        fields = '__all__'
+def purchaseorder_info(request):
+    if request.method == 'GET':
+        data_dict = {}
+        search_data = request.GET.get('search_data', '')
+        if search_data:
+            data_dict['id'] = search_data   #要改
+        queryset = models.PurchaseOrders.objects.filter(**data_dict).select_related(
+            'merchant_items__merchant', 'employee')
+        page_object = Pagination(request, queryset)
+        form = PurchaseOrderInfoModelForm()
+        title='所有采购单'
+        context = {
+            'form': form,
+            'purchase_orders': page_object.page_queryset,
+            'title':title,
+            'search_data':search_data,
+            'page_string':page_object.html()}
+        return render(request, 'order/purchaseorder_info.html', context)

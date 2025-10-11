@@ -45,7 +45,7 @@ class EmployeeInfoModelForm(BootStrapModelForm):
             'password': '密码',
             'gender': '性别',
             'phone': '电话',
-            'position': '部门',
+            'position': '职位',
         }
         widgets = {'password': forms.PasswordInput(render_value=True)}
     def clean_password(self):
@@ -82,14 +82,23 @@ def employee_register(request):
         else:
             return render(request, 'register_edit.html', {'form': form, 'title': title})
 class EmployeeInfoEditModelForm(BootStrapModelForm):
+    employee_name = forms.CharField(label='员工名',  disabled=True)
+    phone = forms.CharField(
+    label='电话号码',
+    validators=[
+        RegexValidator(
+            regex=r'^1[3-9]\d{9}$',
+            message='手机号码格式错误')
+    ])
     class Meta:
         model = models.EmployeeInfo
-        exclude = 'employee_name',
+        fields = ['employee_name', 'password',  'gender', 'phone', 'position']
         labels = {
+            'employee_name': '员工名',
             'password': '密码',
             'gender': '性别',
             'phone': '电话',
-            'position': '部门',
+            'position': '职位',
         }
         widgets = {'password': forms.PasswordInput(render_value=True)}
     def clean_password(self):
