@@ -118,6 +118,7 @@ class EmployeeInfo(models.Model):
     password = models.CharField('密码', max_length=32)
     gender = models.CharField('性别', max_length=1, choices=GENDER_CHOICES,default='F')
     phone = models.CharField('电话号码', max_length=20)
+    date = models.DateField('入职日期')
 
     position_choices = (
         (1,'销售员'),
@@ -126,7 +127,8 @@ class EmployeeInfo(models.Model):
         (4,'采购员'),
         (5,'技术员'),
         (6,'售后'),
-        (7,'其他') #仓库管理员
+        (7,'仓库管理员'),
+        (8,'其他')
     )
 
     position = models.SmallIntegerField('职位',choices=position_choices,default=1)
@@ -216,7 +218,7 @@ class SellOrders(models.Model):
     inventory_items = models.ForeignKey(InventoryItems, on_delete=models.SET_NULL, null=True, blank=True)
     order_quantity = models.IntegerField()
     order_date =  models.DateTimeField('创建时间', auto_now_add=True)
-
+    updated_at = models.DateTimeField('更新时间', auto_now=True)
     status_choices = (
         (1,'未完成'),
         (2,'已完成'),
@@ -224,7 +226,7 @@ class SellOrders(models.Model):
     )
 
     status = models.SmallIntegerField('状态',choices=status_choices,default=1)
-
+    is_deleted = models.BooleanField(default=False, verbose_name='已删除')
     class Meta:
         # managed = False
         db_table = 'sell_orders'

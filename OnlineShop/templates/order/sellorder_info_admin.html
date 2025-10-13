@@ -49,8 +49,7 @@
                     <td>{{ obj.order_date|date:"Y-m-d H:i"}}</td>
                     <td>{{ obj.get_status_display }}</td>
                     <td>
-                        <a class="btn btn-c-primary btn-xs" href="#">编 辑</a>
-                        <a class="btn btn-c-danger btn-xs" href="/sellorder/delete/admin/{{ obj.id }}/">删 除</a>
+                        <a class="btn btn-c-primary btn-xs" href="#">编 辑</a>  
                     </td>
                 </tr>
                 {% empty %}

@@ -52,8 +52,8 @@
           <td>{{ obj.email }}</td>
           <td>{{ obj.address }}</td>
           <td>
-            <a class="btn btn-c-primary btn-xs" href="#">编 辑</a>
-            <a class="btn btn-c-danger btn-xs" href="#">删 除</a>
+            <a class="btn btn-c-primary btn-xs" href="/merchant/edit/{{ obj.id }}/">编 辑</a>
+            <a class="btn btn-c-danger btn-xs" href="/merchant/delete/{{ obj.id }}/">删 除</a>
           </td>
         </tr>
         {% empty %}

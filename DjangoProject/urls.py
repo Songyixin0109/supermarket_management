@@ -52,8 +52,10 @@ urlpatterns = [
     path('sellorder/info/admin/',order.sellorder_info_admin, name='sellorder_info_admin'),
     path('sellorder/info/user/',order.sellorder_info_user, name='sellorder_info_user'),
     path('sellorder/add/',order.sellorder_add, name='sellorder_add'),
-    path('sellorder/delete/admin/<int:nid>/',order.sellorder_delete_admin, name='sellorder_delete_admin'),
+    # path('sellorder/delete/admin/<int:nid>/',order.sellorder_delete_admin, name='sellorder_delete_admin'),
     path('sellorder/delete/user/<int:nid>/',order.sellorder_delete_user, name='sellorder_delete_user'),
+    path('purchaseorder/info/',order.purchaseorder_info, name='purchaseorder_info'),
+    path('purchaseorder/upload/',order.purchase_order_upload, name='purchaseorder_upload'),
 
     #库存管理
     path('inventory/info/admin/', inventory.inventory_info_admin, name='inventory_info_admin'),
@@ -61,7 +63,7 @@ urlpatterns = [
     path('inventory/delete/<int:nid>/',inventory.inventory_delete,name='inventory_delete'),
     path('inventory/statistics/',inventory.inventory_statistics, name='inventory_statistics'),
     path('inventory/chart/',inventory.inventory_chart, name='inventory_chart'),
-    path('inventory/upload/',inventory.inventory_upload,name='inventory_upload'),
+    # path('inventory/upload/',inventory.inventory_upload,name='inventory_upload'),
 
     #商家管理
     path('merchant/info/', merchant.merchant_info, name='merchant_info'),

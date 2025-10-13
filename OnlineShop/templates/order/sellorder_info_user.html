@@ -43,7 +43,7 @@
                 {% for obj in sell_orders %}
                 <tr>
                     <td>{{ obj.id }}</td>
-                    <td>{{ obj.inventory_items.name }}</td>
+                    <td>{{ obj.inventory_items.items_name }}</td>
                     <td>{{ obj.order_quantity }}</td>
                     <td>{{ obj.order_date|date:"Y-m-d H:i" }}</td>
                     <td>

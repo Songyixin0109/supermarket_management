@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django import forms
+from django.db.models import Q
 from django.core.exceptions import ValidationError
 from matplotlib.pyplot import title
 
@@ -9,11 +10,13 @@ from OnlineShop.utils.encrypt import md5
 from OnlineShop.utils.pagination import Pagination
 
 def admin_info(request):
-    data_dict = {}
-    search_data = request.GET.get('search_data', '')
+    search_data = request.GET.get('search_data', '').strip()
+    queryset = models.Admin.objects.all() 
     if search_data:
-        data_dict['username__contains'] = search_data
-    queryset = models.Admin.objects.filter(**data_dict)
+        queryset = queryset.filter(
+            Q(id__icontains=search_data) |
+            Q(username__icontains=search_data)
+        )
     page_object = Pagination(request, queryset)
     title = '管理员信息'
     context = {

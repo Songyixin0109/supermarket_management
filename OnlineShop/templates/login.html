@@ -5,68 +5,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登录界面</title>
-    <!-- 引入Bootstrap CSS -->
+    <title>登录</title>
     <link href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}" rel="stylesheet">
-    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
-            background-color: #f8f9fa;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) no-repeat center/cover fixed;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 15vh;
         }
 
-        .login-container {
-            width: 300px;
-            padding: 20px;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            background-color: #fff;
+        .login-card {
+            background: rgba(255, 255, 255, .15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, .2);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .25);
+            padding: 2.5rem 3rem;
+            width: 320px;
+            color: #fff;
+            font-size: 1.8rem;
+        }
+
+        .login-card h2 {
+            margin: 0 0 1.1rem;
+            font-size: 3rem;
+            letter-spacing: 1px;
+        }
+
+        .login-card .form-control {
+            background: rgba(255, 255, 255, .9);
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            margin-bottom: 1.2rem;
+            height: 40px;
+            box-shadow: none;
+        }
+
+        .login-card .form-control:focus {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, .5);
+        }
+
+        .login-card button {
+            margin-top: .5rem;
+            /* 按钮与最后一个输入框间距 */
+        }
+
+        .login-card label {
+            margin-bottom: .5rem;
+        }
+
+        .login-card .text-danger {
+            font-size: .85rem;
         }
     </style>
 </head>
 
 <body>
-    <div class="login-container">
-        <h2 class="text-center mb-4">登录</h2>
+    <div class="login-card">
+        <h2 class="text-center">登 录</h2>
         <form id="loginForm" method="post" novalidate>
             {% csrf_token %}
             {% for field in form %}
             <div class="mb-3">
-                <label for="{{ field.label }}">{{ field.label }}</label>
+                <label>{{ field.label }}</label>
                 {{ field }}
-                <span style="color: red">{{ field.errors.0 }}</span>
+                <span class="text-danger">{{ field.errors.0 }}</span>
             </div>
             {% endfor %}
-            <button type="submit" class="btn btn-primary    w-100">登录</button>
+            <button type="submit" class="btn btn-c-primary w-100">登 录</button>
         </form>
     </div>
 
-    <!-- 引入jQuery -->
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
-    <!-- 引入Bootstrap JS -->
     <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
-    <!-- 自定义脚本 -->
-    <!-- <script>
-        $(document).ready(function() {
-            $('#loginForm').on('submit', function(event) {
-                event.preventDefault(); // 阻止表单默认提交行为
-
-                // 获取用户名和密码
-                const username = $('#username').val();
-                const password = $('#password').val();
-
-                // 这里可以添加登录验证逻辑
-                console.log('用户名:', username);
-                console.log('密码:', password);
-
-                // 模拟登录成功
-                alert('登录成功！');
-            });
-        });
-    </script> -->
 </body>
 
 </html>

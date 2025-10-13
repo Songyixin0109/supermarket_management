@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
 from django import forms
+from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 
 from OnlineShop import models
@@ -10,20 +11,23 @@ from OnlineShop.utils.bootstrap import BootStrapModelForm
 from OnlineShop.utils.encrypt import md5
 from OnlineShop.utils.pagination import Pagination
 
-# Create your views here.
 def employee_info(request):
     title='员工信息'
-    data_dict={}
-    search_data = request.GET.get('search_data','')
-    print(search_data)
+
+    search_data = request.GET.get('search_data','').strip()
+    queryset = models.EmployeeInfo.objects.all() 
     if search_data:
-        data_dict['employeename__contains'] = search_data
-    queryset = models.EmployeeInfo.objects.filter(**data_dict)
+        queryset = queryset.filter(
+            Q(id__icontains=search_data) |
+            Q(employee_name__icontains=search_data)
+        )
     page_object=Pagination(request,queryset)
-    context = {'employee_list': page_object.page_queryset,
-               'title':title,
-               'search_data':search_data,
-               'page_string':page_object.html()}
+    context = {
+        'employee_list': page_object.page_queryset,
+        'title':title,
+        'search_data':search_data,
+        'page_string':page_object.html()
+        }
     return render(request, 'employee/employee_info.html', context)
 class EmployeeInfoModelForm(BootStrapModelForm):
     confirm_password = forms.CharField(
@@ -39,12 +43,13 @@ class EmployeeInfoModelForm(BootStrapModelForm):
         ])
     class Meta:
         model = models.EmployeeInfo
-        fields = ['employee_name', 'password',  'gender', 'phone', 'position']
+        fields = ['employee_name', 'password',  'gender', 'phone', 'date','position']
         labels = {
             'employee_name': '员工名',
             'password': '密码',
             'gender': '性别',
             'phone': '电话',
+            'date': '入职日期',
             'position': '职位',
         }
         widgets = {'password': forms.PasswordInput(render_value=True)}

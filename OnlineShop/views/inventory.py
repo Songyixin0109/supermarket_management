@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from django import forms
-from django.db.models import Prefetch,F
+from django.db.models import Prefetch,F,Q
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
@@ -20,8 +20,12 @@ class InventoryItemsInfoModelForm(forms.ModelForm):
         model = models.InventoryItems
         fields = '__all__'
 
+
+
+
 def inventory_info_admin(request):
-    search_data = request.GET.get('search_data', '')
+    search_data = request.GET.get('search_data', '').strip()
+
     queryset = InventoryItems.objects.select_related('items_name').prefetch_related(
         Prefetch(
             'items_name__merchant_items_set',
@@ -29,11 +33,13 @@ def inventory_info_admin(request):
         )
     )
 
-    if search_data:
-        queryset = queryset.filter(items_name__name__icontains=search_data)
+    if search_data:         
+        queryset = queryset.filter(
+            Q(id__icontains=search_data) |
+            Q(items_name__name__icontains=search_data)
+        )
 
     page_object = Pagination(request, queryset)
-
     context = {
         'inventory_items': page_object.page_queryset,
         'title': '库存商品',
@@ -42,8 +48,10 @@ def inventory_info_admin(request):
     }
     return render(request, 'inventory/inventory_info_admin.html', context)
 
+
 def inventory_info_user(request):
-    search_data = request.GET.get('search_data', '')
+    search_data = request.GET.get('search_data', '').strip()
+
     queryset = InventoryItems.objects.select_related('items_name').prefetch_related(
         Prefetch(
             'items_name__merchant_items_set',
@@ -51,11 +59,13 @@ def inventory_info_user(request):
         )
     )
 
-    if search_data:
-        queryset = queryset.filter(items_name__name__icontains=search_data)
+    if search_data:          # 同上
+        queryset = queryset.filter(
+            Q(id__icontains=search_data) |
+            Q(items_name__name__icontains=search_data)
+        )
 
     page_object = Pagination(request, queryset)
-
     context = {
         'inventory_items': page_object.page_queryset,
         'title': '商品列表',
@@ -101,19 +111,19 @@ def inventory_chart(request):
     }
     return JsonResponse(result)
 
-def inventory_upload(request):
-    file_object = request.FILES.get('excel')
-    wb = load_workbook(file_object)
-    sheet = wb.worksheets[3]
+# def inventory_upload(request):
+#     file_object = request.FILES.get('excel')
+#     wb = load_workbook(file_object)
+#     sheet = wb.worksheets[3]
 
-    for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row):
-        exists = models.InventoryItems.objects.filter(name=row[0].value).exists()
-        if not exists:
-            models.InventoryItems.objects.create(
-                name = row[0].value,
-                description = row[1].value,
-                catalog = row[2].value,
-                ask_price = row[3].value,
-                inventory_quantity = row[4].value,
-                )
-    return redirect('/inventory/info/employee/')
+#     for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row):
+#         exists = models.InventoryItems.objects.filter(name=row[0].value).exists()
+#         if not exists:
+#             models.InventoryItems.objects.create(
+#                 name = row[0].value,
+#                 description = row[1].value,
+#                 catalog = row[2].value,
+#                 ask_price = row[3].value,
+#                 inventory_quantity = row[4].value,
+#                 )
+#     return redirect('/inventory/info/employee/')

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django import forms
+from django.db.models import Q
 from django.core.exceptions import ValidationError
 from matplotlib.pyplot import title
 
@@ -8,20 +9,25 @@ from OnlineShop.utils.bootstrap import BootStrapModelForm
 from OnlineShop.utils.encrypt import md5
 from OnlineShop.utils.pagination import Pagination
 
+
 def merchant_info(request):
-    data_dict = {}
-    search_data = request.GET.get('search_data', '')
-    if search_data:
-        data_dict['username__contains'] = search_data
-    queryset = models.MerchantInfo.objects.filter(**data_dict)
+    search_data = request.GET.get('search_data', '').strip()
+    queryset = models.MerchantInfo.objects.all()          # 先拿全集
+
+    if search_data:                                       # 有输入才过滤
+        queryset = queryset.filter(
+            Q(id__icontains=search_data) |
+            Q(merchant_name__icontains=search_data)
+        )
+
     page_object = Pagination(request, queryset)
-    title = '商户信息'
     context = {
-                'merchant_list': page_object.page_queryset,
-                'title': title,
-                'search_data':search_data,
-                'page_string':page_object.html(),}
-    return render(request,'merchant/merchant_info.html',context)
+        'merchant_list': page_object.page_queryset,
+        'title': '商户信息',
+        'search_data': search_data,
+        'page_string': page_object.html(),
+    }
+    return render(request, 'merchant/merchant_info.html', context)
 
 class MerchantModelForm(BootStrapModelForm):
     class Meta:

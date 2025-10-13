@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
 from django import forms
+from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 
 from OnlineShop import models
@@ -11,20 +12,22 @@ from OnlineShop.utils.bootstrap import BootStrapModelForm
 from OnlineShop.utils.encrypt import md5
 from OnlineShop.utils.pagination import Pagination
 
-# Create your views here.
 def user_info(request):
     title='用户信息'
-    data_dict={}
-    search_data = request.GET.get('search_data','')
-    print(search_data)
+    search_data = request.GET.get('search_data','').strip()
+    queryset = models.UserInfo.objects.all()
     if search_data:
-        data_dict['username__contains'] = search_data
-    queryset = models.UserInfo.objects.filter(**data_dict)
+        queryset = queryset.filter(
+            Q(id__icontains=search_data) |
+            Q(username__icontains=search_data)
+        )
     page_object=Pagination(request,queryset)
-    context = {'user_list': page_object.page_queryset,
-               'title':title,
-               'search_data':search_data,
-               'page_string':page_object.html()}
+    context = {
+        'user_list': page_object.page_queryset,
+        'title':title,
+        'search_data':search_data,
+        'page_string':page_object.html()
+        }
     return render(request, 'user/user_info.html', context)
 class UserInfoModelForm(BootStrapModelForm):
     confirm_password = forms.CharField(
