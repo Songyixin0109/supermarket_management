@@ -1,6 +1,27 @@
 {% extends "layout/layout_"|add:request.session.info.role|add:".html" %}
 {% block content %}
 <div class="container">
+    <!-- <div style="margin-bottom: 10px">
+        <a class="btn btn-c-success" href="/purchaseorder/upload/">
+            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+            上传入库单
+        </a>
+    </div> -->
+    <div class="panel panel-default" style="max-width: 400px; margin: 10px 0;">
+        <div class="panel-heading"><span class="glyphicon glyphicon-upload"></span> 上传入库单Excel</div>
+        <div class="panel-body">
+            <form id="uploadExcelForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="file" name="excel" accept=".xlsx" required>
+                </div>
+                <button type="submit" class="btn btn-c-success btn-sm">
+                    <span class="glyphicon glyphicon-upload"></span> 上传并导入
+                </button>
+                <span id="uploadStatus" style="margin-left: 10px;"></span>
+            </form>
+        </div>
+    </div>
     <div class="search-bar">
         <div style="float: right;width: 300px">
             <form method="get">
@@ -8,35 +29,26 @@
                     <input type="text" name="search_data" class="form-control" placeholder="搜索..."
                         value="{{ search_data }}">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit">
-                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                        </button>
+                        <button class="btn btn-default" type="submit"><span
+                                class="glyphicon glyphicon-search"></span></button>
                     </span>
                 </div>
             </form>
         </div>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
-            {{ title }}
-        </div>
-        <!-- <div class="panel-body">
-                <p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum
-                    nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis
-                    vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </div>  -->
 
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="glyphicon glyphicon-list-alt"></span> {{ title }}</div>
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>商品名称</th>
-                    <th>商家名称</th>
-                    <th>进货价格</th>
-                    <th>进货数量</th>
+                    <th>商品</th>
+                    <th>商家</th>
+                    <th>进价</th>
+                    <th>数量</th>
                     <th>进货时间</th>
-                    <th>订单状态</th>
+                    <th>状态</th>
                     <th>更新时间</th>
                     <th>操作员</th>
                     <th>操作</th>
@@ -47,31 +59,149 @@
                 <tr>
                     <td>{{ obj.id }}</td>
                     <td>{{ obj.merchant_items.merchant_items.name|default:"-" }}</td>
-                    <td>{{ obj.merchant_items.merchant }}</td>
+                    <td>{{ obj.merchant_items.merchant.merchant_name }}</td>
                     <td>{{ obj.merchant_items.merchant_price }}</td>
                     <td>{{ obj.purchase_quantity }}</td>
-                    <td>{{ obj.created_at|date:"Y-m-d H:i"}}</td>
-                    <td>{{ obj.get_status_display }}</td>
-                    <td>{{ obj.updated_at|date:"Y-m-d H:i"}}</td>
+                    <td>{{ obj.created_at|date:"Y-m-d H:i" }}</td>
+                    <td class="col-status">{{ obj.get_status_display }}</td>
+                    <td>{{ obj.updated_at|date:"Y-m-d H:i" }}</td>
                     <td>{{ obj.employee.employee_name|default:"-" }}</td>
                     <td>
-                        <a class="btn btn-c-primary btn-xs" href="#">编 辑</a>
+                        <button type="button" class="btn btn-c-primary btn-xs btn-purchase-edit" data-nid="{{ obj.id }}"
+                            data-status="{{ obj.status }}">编 辑</button>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="12" class="text-center text-muted">暂无入库单</td>
+                    <td colspan="10" class="text-center text-muted">暂无入库单</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
     <nav aria-label="Page navigation">
-        <ul class="pagination">
-            {{ page_string }}
-        </ul>
+        <ul class="pagination">{{ page_string }}</ul>
     </nav>
 </div>
 
+<!-- ===== 编辑弹窗（直接写在这里） ===== -->
+<div class="modal fade" id="purchaseEditModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">编辑入库单（仅状态可改）</h4>
+            </div>
+            <form id="purchaseEditForm" class="form-horizontal" method="post" novalidate>
+                {% csrf_token %}
+                <div class="modal-body" id="modalBody">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">{{ field.label }}</label>
+                        <div class="col-sm-8">
+                            {% if field.name == 'status' %}
+                            {{ field }}
+                            <span class="error-msg" style="color:red;"></span>
+                            {% else %}
+                            <input type="text" class="form-control" name="{{ field.name }}"
+                                value="{{ field.value|default:'' }}" disabled>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-c-danger" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-c-primary" id="btnPurchaseSave">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
+{% block js %}
+<script>
+    $(function () {
+        let nidGlobal;
+
+        $('.btn-purchase-edit').on('click', function () {
+            nidGlobal = $(this).data('nid');
+            
+            $.getJSON('/purchase/admin/edit/' + nidGlobal + '/', function (res) {
+                if (res.status) {
+                    // 统一填充：循环所有字段
+                    Object.keys(res.fields).forEach(function (key) {
+                        const $input = $('#modalBody input[name="' + key + '"]');
+                        const $select = $('#modalBody select[name="' + key + '"]');
+                        if ($select.length) {
+                            $select.val(res.fields[key]);   // 下拉框
+                        } else if ($input.length) {
+                            $input.val(res.fields[key]);    // 文本框
+                        }
+                    });
+                    $('#purchaseEditModal').modal('show');
+                } else {
+                    alert(res.error || '加载失败');
+                }
+            });
+        });
+        $('#uploadExcelForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            $('#uploadStatus').html('<span class="text-muted">上传中...</span>');
+            
+            $.ajax({
+                url: '/purchaseorder/upload/',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status) {
+                        $('#uploadStatus').html('<span class="text-success">导入成功！</span>');
+                        setTimeout(function () { location.reload(); }, 500);
+                    } else {
+                        $('#uploadStatus').html('<span class="text-danger">' + (res.msg || '导入失败') + '</span>');
+                    }
+                },
+                error: function () {
+                    $('#uploadStatus').html('<span class="text-danger">网络错误</span>');
+                }
+            });
+        });
+        // 保存
+        $('#btnPurchaseSave').on('click', function () {
+            const $btn = $(this);
+            if ($btn.prop('disabled')) return;
+            $btn.prop('disabled', true).text('保存中…');
+            $('.error-msg').text('');
+            
+            $.ajax({
+                url: '/purchase/admin/edit/' + nidGlobal + '/',
+                type: 'post',
+                data: $('#purchaseEditForm').serialize(),
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status) {
+                        alert(res.msg || '状态已更新');
+                        $('#purchaseEditModal').modal('hide');
+                        location.reload();
+                    } else {
+                        $.each(res.error, function (k, v) {
+                            $('#id_' + k).next('.error-msg').text(v[0]);
+                        });
+                    }
+                },
+                complete: function () {
+                    $btn.prop('disabled', false).text('保存');
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

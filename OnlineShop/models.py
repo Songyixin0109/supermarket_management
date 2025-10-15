@@ -163,8 +163,8 @@ class PurchaseItems(models.Model):
 
 class MerchantItems(models.Model):
     """商家商品"""
-    merchant = models.ForeignKey(MerchantInfo, on_delete=models.CASCADE)
-    merchant_items = models.ForeignKey(PurchaseItems,on_delete=models.CASCADE,related_name='merchant_items_set' )
+    merchant = models.ForeignKey(MerchantInfo, on_delete=models.CASCADE,verbose_name='商家')
+    merchant_items = models.ForeignKey(PurchaseItems,on_delete=models.CASCADE,related_name='merchant_items_set',verbose_name='商品' )
     merchant_price = models.DecimalField('进货价',max_digits=10, decimal_places=2)
 
     class Meta:
@@ -174,29 +174,31 @@ class MerchantItems(models.Model):
 
 class InventoryItems(models.Model):
     """库存商品"""
-    items_name = models.ForeignKey(PurchaseItems, on_delete=models.CASCADE)
+    items_name = models.ForeignKey(PurchaseItems, on_delete=models.CASCADE,verbose_name='商品名')
     sell_price = models.DecimalField('销售价', max_digits=10, decimal_places=2,validators=[MinValueValidator(0)])
-    Inventory_quantity = models.IntegerField('库存数量', validators=[MinValueValidator(0)])
+    inventory_quantity = models.IntegerField('库存数量', validators=[MinValueValidator(0)])
 
     class Meta:
         # managed = False
         db_table = 'inventory_items'
 
     def __str__(self):
-        return self.items_name
+        return self.items_name.name if self.items_name else "未命名商品"
 
 
 class PurchaseOrders(models.Model):
     merchant_items = models.ForeignKey(
         MerchantItems,
         on_delete=models.SET_NULL,   
-        null=True, blank=True
+        null=True, blank=True,
+        verbose_name='商品'
     )
     purchase_quantity = models.IntegerField('进货数量', validators=[MinValueValidator(0)])
     employee = models.ForeignKey(
         EmployeeInfo,
         on_delete=models.SET_NULL,
-        null=True, blank=True
+        null=True, blank=True,
+        verbose_name='操作员'
     )
 
     STATUS_CHOICES = (
@@ -214,9 +216,17 @@ class PurchaseOrders(models.Model):
 
 
 class SellOrders(models.Model):
-    user = models.ForeignKey('UserInfo', on_delete=models.SET_NULL, null=True, blank=True)
-    inventory_items = models.ForeignKey(InventoryItems, on_delete=models.SET_NULL, null=True, blank=True)
-    order_quantity = models.IntegerField()
+    user = models.ForeignKey(
+        'UserInfo',
+        on_delete=models.SET_NULL, 
+        null=True, blank=True,
+        verbose_name='用户')
+    inventory_items = models.ForeignKey(
+        InventoryItems, 
+        on_delete=models.SET_NULL, 
+        null=True, blank=True,
+        verbose_name='商品')
+    order_quantity = models.IntegerField('购买数量')
     order_date =  models.DateTimeField('创建时间', auto_now_add=True)
     updated_at = models.DateTimeField('更新时间', auto_now=True)
     status_choices = (

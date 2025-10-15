@@ -52,10 +52,11 @@ urlpatterns = [
     path('sellorder/info/admin/',order.sellorder_info_admin, name='sellorder_info_admin'),
     path('sellorder/info/user/',order.sellorder_info_user, name='sellorder_info_user'),
     path('sellorder/add/',order.sellorder_add, name='sellorder_add'),
-    # path('sellorder/delete/admin/<int:nid>/',order.sellorder_delete_admin, name='sellorder_delete_admin'),
+    path('sellorder/admin/edit/<int:nid>/', order.sellorder_admin_edit, name='sellorder_admin_edit'),
     path('sellorder/delete/user/<int:nid>/',order.sellorder_delete_user, name='sellorder_delete_user'),
     path('purchaseorder/info/',order.purchaseorder_info, name='purchaseorder_info'),
     path('purchaseorder/upload/',order.purchase_order_upload, name='purchaseorder_upload'),
+    path('purchase/admin/edit/<int:nid>/', order.purchase_admin_edit, name='purchase_admin_edit'),
 
     #库存管理
     path('inventory/info/admin/', inventory.inventory_info_admin, name='inventory_info_admin'),

@@ -113,5 +113,26 @@
   text-decoration: none;         /* 去掉下划线 */
 }
 
-
-
+/* button 焦点黑框 & 字体变黑清零 */
+/* 压制 Bootstrap 3 按钮黑框 & 变黑文字 */
+html body .btn.btn-c-primary:focus,
+html body .btn.btn-c-primary:active {
+    outline: none;
+    color: #fff;
+    background: #7cc7ff;
+    box-shadow: none;
+}
+html body .btn.btn-c-danger:focus,
+html body .btn.btn-c-danger:active {
+    outline: none;
+    color: #fff;
+    background: #ff7eb3;
+    box-shadow: none;
+}
+html body .btn.btn-c-success:focus,
+html body .btn.btn-c-success:active {
+    outline: none;
+    color: #fff;
+    background: #66d9a9;
+    box-shadow: none;
+}

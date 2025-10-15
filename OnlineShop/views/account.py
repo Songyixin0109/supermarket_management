@@ -56,7 +56,7 @@ def user_login(request):
                     'username': user_object.username,
                     'role': 'user'
                     }
-                return redirect('/welome/')
+                return redirect('/welcome/')
             else:
                 form.add_error('password', '用户名或密码错误')
                 return render(request, 'login.html', {'form': form})

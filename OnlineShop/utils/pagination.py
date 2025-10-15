@@ -28,7 +28,7 @@ class Pagination(object):
         """
 
         :param request: 请求对象
-        :param queryset:符合条件的数据
+        :param queryset:符合条件的数据（根据这个数据给他进行分页处理）
         :param page_size:每页显示数据条数
         :param page_param:在url中获取分页的参数，如/user/info/?page=1
         :param plus:前后页码数
@@ -51,8 +51,16 @@ class Pagination(object):
             total_page_count+=1
         self.total_page_count=total_page_count
         self.plus = plus
-    def html(self):
+        self.request = request
+        self.page_param = page_param  # 保存页码参数名
+        
+        # 创建查询参数的副本并移除当前页码
+        self.query_dict = request.GET.copy()
+        if self.page_param in self.query_dict:
+            self.query_dict.pop(self.page_param)
 
+
+    def html(self):
         if (self.page - self.plus) > 0:
             start_page = self.page - self.plus
         else:
@@ -63,39 +71,50 @@ class Pagination(object):
             end_page = self.total_page_count
 
         page_str_list = []
-        page_str_list.append('<li ><a href="?page={}">首页</a></li>'.format(1))
-        if self.page > 1:
-            prev = '<li ><a href="?page={}">上一页</a></li>'.format(self.page - 1)
-        else:
-            prev = '<li ><a href="?page={}">上一页</a></li>'.format(1)
-        page_str_list.append(prev)
+        
+        # 首页
+        self.query_dict.setlist(self.page_param, [1])
+        page_str_list.append('<li><a href="?{}">首页</a></li>'.format(self.query_dict.urlencode()))
+        
+        # 上一页
+        prev_page = self.page - 1 if self.page > 1 else 1
+        self.query_dict.setlist(self.page_param, [prev_page])
+        page_str_list.append('<li><a href="?{}">上一页</a></li>'.format(self.query_dict.urlencode()))
 
+        # 页码
         for i in range(start_page, end_page + 1):
+            self.query_dict.setlist(self.page_param, [i])
             if i == self.page:
-                ele = '<li class="active"><a href="?page={}">{}</a></li>'.format(i, i)
+                ele = '<li class="active"><a href="?{}">{}</a></li>'.format(self.query_dict.urlencode(), i)
             else:
-                ele = '<li><a href="?page={}">{}</a></li>'.format(i, i)
+                ele = '<li><a href="?{}">{}</a></li>'.format(self.query_dict.urlencode(), i)
             page_str_list.append(ele)
 
-        if self.page < self.total_page_count:
-            next = '<li ><a href="?page={}">下一页</a></li>'.format(self.page + 1)
-        else:
-            next = '<li ><a href="?page={}">下一页</a></li>'.format(self.total_page_count)
-        page_str_list.append(next)
-        page_str_list.append('<li ><a href="?page={}">尾页</a></li>'.format(self.total_page_count))
+        # 下一页
+        next_page = self.page + 1 if self.page < self.total_page_count else self.total_page_count
+        self.query_dict.setlist(self.page_param, [next_page])
+        page_str_list.append('<li><a href="?{}">下一页</a></li>'.format(self.query_dict.urlencode()))
+        
+        # 尾页
+        self.query_dict.setlist(self.page_param, [self.total_page_count])
+        page_str_list.append('<li><a href="?{}">尾页</a></li>'.format(self.query_dict.urlencode()))
 
+        # 跳转表单
         search_string = """<li>
-                            <div style="float: right;width: 100px">
-                                <form method="get">
-                                    <div class="input-group">
-                                        <input type="text" name="page" class="form-control" ">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default" type="submit">跳转</button>
-                                        </span>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>"""
+                        <div style="float: right;width: 100px">
+                            <form method="get">
+                                <div class="input-group">
+                                    <input type="text" 
+                                            name="{}" 
+                                            style="position: relative; float:left;display: inline-block;width: 60px;margin-right: 1px" 
+                                            class="form-control" placeholder="页码">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="submit">跳转</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </li>""".format(self.page_param)
         page_str_list.append(search_string)
 
         page_string = mark_safe(''.join(page_str_list))
