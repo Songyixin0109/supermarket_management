@@ -2,11 +2,9 @@ from django.shortcuts import render, redirect
 from django import forms
 from django.db.models import Q
 from django.core.exceptions import ValidationError
-from matplotlib.pyplot import title
 
 from OnlineShop import models
 from OnlineShop.utils.bootstrap import BootStrapModelForm
-from OnlineShop.utils.encrypt import md5
 from OnlineShop.utils.pagination import Pagination
 
 

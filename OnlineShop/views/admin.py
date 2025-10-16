@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django import forms
 from django.db.models import Q
 from django.core.exceptions import ValidationError
-from matplotlib.pyplot import title
 
 from OnlineShop import models
 from OnlineShop.utils.bootstrap import BootStrapModelForm
@@ -72,36 +71,46 @@ def admin_register(request):
         else:
             return render(request, 'register_edit.html', {'form':form, 'title':title})
 
-class AdminEditModelForm(BootStrapModelForm):
+class AdminResetModelForm(BootStrapModelForm):
     confirm_password = forms.CharField(
         label='确认密码',
         widget=forms.PasswordInput(render_value=True))
-    username = forms.CharField(
-        label='用户名',disabled=True)
     class Meta:
         model = models.Admin
-        fields = ['username', 'password']
+        fields = ['password']
         labels = {
-            'username': '用户名',
             'password': '新密码',
         }
         widgets = {'password': forms.PasswordInput(render_value=True)}
     def clean_password(self):
         password = self.cleaned_data['password']
-        return md5(password)
+        if len(password) < 8:
+            raise ValidationError("密码长度至少8位")
+        if not any(char.islower() for char in password):
+            raise ValidationError("密码必须包含至少一个小写字母")
+        if not any(char.isupper() for char in password):
+            raise ValidationError("密码必须包含至少一个大写字母")
+        md5_pwd = md5(password)
+        exists = models.Admin.objects.filter(id=self.instance.pk, password=md5_pwd).exists()
+        if exists:
+            raise ValidationError("新密码不能与原密码相同")
+        return md5_pwd
     def clean_confirm_password(self):
-        password = self.cleaned_data['password']
+        password = self.cleaned_data.get('password') 
         confirm_password = md5(self.cleaned_data['confirm_password'])
         if password != confirm_password:
             raise ValidationError('密码不一致')
         return confirm_password
-def admin_edit(request, nid):
-    title = '编辑管理员'
+def admin_reset(request, nid):
+    row_data = models.Admin.objects.filter(id=nid).first()
+    if not row_data:
+        return redirect('/admin/info/')
+    title = '重置密码 - {}'.format(row_data.username)
     if request.method == "GET":
-        form = AdminEditModelForm(instance=models.Admin.objects.get(id=nid))
+        form = AdminResetModelForm()
         return render(request, 'register_edit.html', {'form': form, 'title': title})
     if request.method == "POST":
-        form = AdminEditModelForm(request.POST, instance=models.Admin.objects.get(id=nid))
+        form = AdminResetModelForm(request.POST, instance=row_data)
         if form.is_valid():
             form.save()
             return redirect('/admin/info/')

@@ -1,13 +1,10 @@
 from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
-from django.utils.safestring import mark_safe
 from django import forms
 from django.db.models import Q
-from django.contrib.auth.hashers import make_password
 
 from OnlineShop import models
-from OnlineShop.models import UserInfo
 from OnlineShop.utils.bootstrap import BootStrapModelForm
 from OnlineShop.utils.encrypt import md5
 from OnlineShop.utils.pagination import Pagination
@@ -89,32 +86,25 @@ class UserInfoEditModelForm(BootStrapModelForm):
     username = forms.CharField(label='用户名', disabled=True)
     class Meta:
         model = models.UserInfo
-        fields = ['username', 'password', 'name', 'gender', 'phone', 'email']
+        fields = ['username', 'name', 'gender', 'phone', 'email']
         labels = {
             'username': '用户名',
-            'password': '密码',
             'name': '姓名',
             'gender': '性别',
             'phone': '电话',
             'email': '邮箱',
         }
-        widgets = {'password': forms.PasswordInput(render_value=True)}
-    def clean_password(self):
-        password = self.cleaned_data.get('password')
-        if len(password) < 8:
-            raise ValidationError("密码长度至少8位")
-        if not any(char.islower() for char in password):
-            raise ValidationError("密码必须包含至少一个小写字母")
-        if not any(char.isupper() for char in password):
-            raise ValidationError("密码必须包含至少一个大写字母")
-        return password
+    
 def user_edit(request, nid):
+    row_data = models.UserInfo.objects.filter(id=nid).first()
+    if not row_data:
+        return redirect('/user/info/')
     title='编辑用户'
     if request.method == "GET":
-        form = UserInfoEditModelForm(instance=UserInfo.objects.get(id=nid))
+        form = UserInfoEditModelForm(instance=row_data)
         return render(request, 'register_edit.html', {'form': form,'title':title})
     if request.method == "POST":
-        form = UserInfoEditModelForm(request.POST, instance=UserInfo.objects.get(id=nid))
+        form = UserInfoEditModelForm(request.POST, instance=row_data)
         if form.is_valid():
             form.save()
             return redirect('/user/info/')
@@ -123,6 +113,54 @@ def user_edit(request, nid):
 def user_delete(request, nid):
     models.UserInfo.objects.get(id=nid).delete()
     return redirect('/user/info/')
+
+class UserResetModelForm(BootStrapModelForm):
+    confirm_password = forms.CharField(
+        label='确认密码',
+        widget=forms.PasswordInput(render_value=True))
+    class Meta:
+        model = models.UserInfo
+        fields = ['password']
+        labels = {
+            'password': '新密码',
+        }
+        widgets = {'password': forms.PasswordInput(render_value=True)}
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        if len(password) < 8:
+            raise ValidationError("密码长度至少8位")
+        if not any(char.islower() for char in password):
+            raise ValidationError("密码必须包含至少一个小写字母")
+        if not any(char.isupper() for char in password):
+            raise ValidationError("密码必须包含至少一个大写字母")
+        md5_pwd = md5(password)
+        exists = models.Admin.objects.filter(id=self.instance.pk, password=md5_pwd).exists()
+        if exists:
+            raise ValidationError("新密码不能与原密码相同")
+        return md5_pwd
+    def clean_confirm_password(self):
+        password = self.cleaned_data.get('password') 
+        confirm_password = md5(self.cleaned_data['confirm_password'])
+        if password != confirm_password:
+            raise ValidationError('密码不一致')
+        return confirm_password
+    
+def user_reset(request, nid):
+    row_data = models.UserInfo.objects.filter(id=nid).first()
+    if not row_data:
+        return redirect('/user/info/')
+    title = '重置密码 - {}'.format(row_data.username)
+    if request.method == "GET":
+        form = UserResetModelForm()
+        return render(request, 'register_edit.html', {'form': form, 'title': title})
+    if request.method == "POST":
+        form = UserResetModelForm(request.POST, instance=row_data)
+        if form.is_valid():
+            form.save()
+            return redirect('/user/info/')
+        else:
+            return render(request, 'register_edit.html', {'form': form, 'title': title})
+
 
 class SellOrderModelForm(forms.ModelForm):
     class Meta:

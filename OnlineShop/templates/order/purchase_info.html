@@ -1,12 +1,6 @@
 {% extends "layout/layout_"|add:request.session.info.role|add:".html" %}
 {% block content %}
 <div class="container">
-    <!-- <div style="margin-bottom: 10px">
-        <a class="btn btn-c-success" href="/purchaseorder/upload/">
-            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
-            上传入库单
-        </a>
-    </div> -->
     <div class="panel panel-default" style="max-width: 400px; margin: 10px 0;">
         <div class="panel-heading"><span class="glyphicon glyphicon-upload"></span> 上传入库单Excel</div>
         <div class="panel-body">
@@ -63,7 +57,11 @@
                     <td>{{ obj.merchant_items.merchant_price }}</td>
                     <td>{{ obj.purchase_quantity }}</td>
                     <td>{{ obj.created_at|date:"Y-m-d H:i" }}</td>
-                    <td class="col-status">{{ obj.get_status_display }}</td>
+                    <td class="col-status">
+                        <span class="status-{{ obj.status }}">
+                            {{ obj.get_status_display }}
+                        </span>
+                    </td>
                     <td>{{ obj.updated_at|date:"Y-m-d H:i" }}</td>
                     <td>{{ obj.employee.employee_name|default:"-" }}</td>
                     <td>
@@ -129,7 +127,7 @@
 
         $('.btn-purchase-edit').on('click', function () {
             nidGlobal = $(this).data('nid');
-            
+
             $.getJSON('/purchase/admin/edit/' + nidGlobal + '/', function (res) {
                 if (res.status) {
                     // 统一填充：循环所有字段
@@ -153,7 +151,7 @@
 
             const formData = new FormData(this);
             $('#uploadStatus').html('<span class="text-muted">上传中...</span>');
-            
+
             $.ajax({
                 url: '/purchaseorder/upload/',
                 type: 'POST',
@@ -180,7 +178,7 @@
             if ($btn.prop('disabled')) return;
             $btn.prop('disabled', true).text('保存中…');
             $('.error-msg').text('');
-            
+
             $.ajax({
                 url: '/purchase/admin/edit/' + nidGlobal + '/',
                 type: 'post',

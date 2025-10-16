@@ -1,27 +1,17 @@
-from openpyxl import load_workbook
-
 from django.shortcuts import render, redirect
-from django.core.exceptions import ValidationError
-from django.utils.safestring import mark_safe
 from django import forms
-from django.db.models import Prefetch,F,Q
-from django.contrib.auth.hashers import make_password
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse, HttpResponse
+from django.db.models import Prefetch,Q
+from django.http import JsonResponse
 
 from OnlineShop import models
 from OnlineShop.models import MerchantItems,InventoryItems
-from OnlineShop.utils.bootstrap import BootStrapModelForm
-from OnlineShop.utils.encrypt import md5
+from OnlineShop.views.order import SellOrderAddModelForm
 from OnlineShop.utils.pagination import Pagination
 
 class InventoryItemsInfoModelForm(forms.ModelForm):
     class Meta:
         model = models.InventoryItems
         fields = '__all__'
-
-
-
 
 def inventory_info_admin(request):
     search_data = request.GET.get('search_data', '').strip()
@@ -66,11 +56,13 @@ def inventory_info_user(request):
         )
 
     page_object = Pagination(request, queryset)
+    sell_form = SellOrderAddModelForm()
     context = {
         'inventory_items': page_object.page_queryset,
         'title': '商品列表',
         'search_data': search_data,
         'page_string': page_object.html(),
+        'sell_form': sell_form, 
     }
     return render(request, 'inventory/inventory_info_user.html', context)
     

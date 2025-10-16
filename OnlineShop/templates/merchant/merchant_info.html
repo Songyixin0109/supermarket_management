@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
   <div style="margin-bottom: 10px">
-    <a class="btn btn-c-success" href="#">
+    <a class="btn btn-c-success" href="/merchant/add/">
       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
       新建商家
     </a>
@@ -26,12 +26,6 @@
       <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
       {{ title }}
     </div>
-    <!-- <div class="panel-body">
-                <p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum
-                    nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis
-                    vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </div> -->
-
     <table class="table">
       <thead>
         <tr>
@@ -48,9 +42,9 @@
         <tr>
           <td>{{ obj.id }}</td>
           <td>{{ obj.merchant_name }}</td>
-          <td>{{ obj.phone }}</td>
-          <td>{{ obj.email }}</td>
-          <td>{{ obj.address }}</td>
+          <td>{{ obj.phone|default:"-" }}</td>
+          <td>{{ obj.email|default:"-" }}</td>
+          <td>{{ obj.address|default:"-" }}</td>
           <td>
             <a class="btn btn-c-primary btn-xs" href="/merchant/edit/{{ obj.id }}/">编 辑</a>
             <a class="btn btn-c-danger btn-xs" href="/merchant/delete/{{ obj.id }}/">删 除</a>

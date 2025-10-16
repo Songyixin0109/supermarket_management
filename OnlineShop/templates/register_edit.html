@@ -1,30 +1,51 @@
 {% extends 'layout/layout_admin.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}">
+{% endblock %}
+
 {% block content %}
-    <div class="container">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{{ title }}</h3>
-            </div>
-            <div class="panel-body">
-                <form class="form-horizontal" method="post" novalidate>
-                    {% csrf_token %}
-                    {% for field in form %}
-                        <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">{{ field.label }}</label>
-                        <div class="col-sm-10">
-                            {{ field }}
-                            <span style="color: red">{{ field.errors.0 }}</span>
-                        </div>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ title }}</h3>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" method="post" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">{{ field.label }}</label>
+                    <div class="col-sm-10">
+                        {{ field }}
+                        <span style="color: red">{{ field.errors.0 }}</span>
                     </div>
-                    {% endfor %}
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-c-primary w-100">保 存</button>
-                        </div>
+                </div>
+                {% endfor %}
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-c-primary w-100">保 存</button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
+{% endblock %}
+{% block js %}
+{{ block.super }}
+<script src="{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js' %}"></script>
+
+<script>
+    $(function () {
+        $('#id_date').datepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN',
+            autoclose: true,
+            todayHighlight: true
+        });
+    });
+</script>
 {% endblock %}

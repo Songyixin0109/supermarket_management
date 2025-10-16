@@ -34,7 +34,6 @@
                 <tr>
                     <th>ID</th>
                     <th>用户名</th>
-                    <th>密码</th>
                     <th>姓名</th>
                     <th>性别</th>
                     <th>电话号码</th>
@@ -47,15 +46,19 @@
                 <tr>
                     <td>{{ obj.id }}</td>
                     <td>{{ obj.username }}</td>
-                    <td>********</td>
                     <td>{{ obj.name }}</td>
                     <td>{{ obj.get_gender_display }}</td>
                     <td>{{ obj.phone }}</td>
                     <td>{{ obj.email }}</td>
                     <td>
                         <a class="btn btn-c-primary btn-xs" href="/user/edit/{{ obj.id }}/">编 辑</a>
+                        <a class="btn btn-c-warning btn-xs" href="/user/reset/{{ obj.id }}/">重置密码</a>
                         <a class="btn btn-c-danger btn-xs" href="/user/delete/{{ obj.id }}/">删 除</a>
                     </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">暂无用户数据</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -28,12 +28,13 @@ urlpatterns = [
     path('user/register/',user.user_register, name='user_registration'),
     path('user/edit/<int:nid>/',user.user_edit,name='user_edit'),
     path('user/delete/<int:nid>/',user.user_delete,name='user_delete'),
+    path('user/reset/<int:nid>/',user.user_reset,name='user_reset'),
     # path('user/index/',user.user_index,name='user_index'),
 
     #管理员管理
     path('admin/info/', admin.admin_info, name='admin_info'),
     path('admin/register/',admin.admin_register, name='admin_registration'),
-    path('admin/edit/<int:nid>/',admin.admin_edit,name='admin_edit'),
+    path('admin/reset/<int:nid>/',admin.admin_reset,name='admin_reset'),
     path('admin/delete/<int:nid>/',admin.admin_delete,name='admin_delete'),
 
     #员工管理
@@ -41,7 +42,8 @@ urlpatterns = [
     path('employee/register/',employee.employee_register, name='employee_registration'),
     path('employee/edit/<int:nid>/',employee.employee_edit,name='employee_edit'),
     path('employee/delete/<int:nid>/',employee.employee_delete,name='employee_delete'),
-
+    path('employee/reset/<int:nid>/',employee.employee_reset,name='employee_reset'),
+    
     #登录注销
     path('admin/login/',account.admin_login,name='admin_login'),
     path('user/login/',account.user_login,name='user_login'),

@@ -1,6 +1,12 @@
 {% extends 'layout/layout_user.html' %}
 {% block content %}
 <div class="container">
+    <div style="margin-bottom: 10px">
+        <button type="button" class="btn btn-c-success" data-toggle="modal" data-target="#myModal">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            新建订单
+        </button>
+    </div>
     <div class="search-bar">
         <div style="float: right;width: 300px">
             <form method="get">
@@ -70,4 +76,81 @@
         </ul>
     </nav>
 </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">新建订单</h4>
+            </div>
+            <div class="modal-body">
+                <form id="formAdd" class="form-horizontal" method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">商品</label>
+                        <div class="col-sm-8">
+                            {{ sell_form.inventory_items }}
+                            <span class="error-msg" style="color: red;"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">购买数量</label>
+                        <div class="col-sm-8">
+                            {{ sell_form.order_quantity }}
+                            <span class="error-msg" style="color: red;"></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-c-danger" data-dismiss="modal">关闭</button>
+                <button id="btnSave" type="button" class="btn btn-c-primary   ">提 交</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    $(function () {
+        bindBtnSaveEvent();
+    });
+
+    function bindBtnSaveEvent() {
+        $("#btnSave").click(function () {
+            $('.error-msg').empty();
+            $.ajax({
+                url: '/sellorder/add/',
+                type: 'post',
+                data: $('#formAdd').serialize(),
+                dataType: 'JSON',
+                success: function (res) {
+                    if (res.status === true) {
+                        $('#myModal').modal('hide');
+                        alert(`新订单已创建：订单ID ${res.order_id}，总金额 ${res.total_amount.toFixed(2)}`);
+                        location.reload();
+                        return;
+                    }
+
+                    // === 重点：库存不足 ===
+                    if (res.error === '库存不足，无法下单') {
+                        if (confirm('库存不足，无法下单！\n点击“确定”返回商品列表。')) {
+                            location.reload();
+                        }
+                        return;
+                    }
+
+                    // 其他字段校验错误
+                    $.each(res.error, function (name, errorList) {
+                        $('#id_' + name).next('.error-msg').text(errorList[0]);
+                    });
+                }
+            });
+        });
+    }
+
+</script>
 {% endblock %}

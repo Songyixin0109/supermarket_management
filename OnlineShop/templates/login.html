@@ -55,7 +55,6 @@
 
         .login-card button {
             margin-top: .5rem;
-            /* 按钮与最后一个输入框间距 */
         }
 
         .login-card label {
@@ -77,7 +76,9 @@
             <div class="mb-3">
                 <label>{{ field.label }}</label>
                 {{ field }}
-                <span class="text-danger">{{ field.errors.0 }}</span>
+                <small class=" d-block" style="min-height:1.2em;color: red;">
+                    {{ field.errors.0 }}
+                </small>
             </div>
             {% endfor %}
             <a href="javascript:;" onclick="document.getElementById('loginForm').submit()"

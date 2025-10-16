@@ -27,18 +27,12 @@
             <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
             {{ title }}
         </div>
-        <!-- <div class="panel-body">
-                <p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum
-                    nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis
-                    vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </div> -->
 
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>员工名</th>
-                    <th>密码</th>
                     <th>性别</th>
                     <th>电话</th>
                     <th>入职日期</th>
@@ -51,15 +45,19 @@
                 <tr>
                     <td>{{ obj.id }}</td>
                     <td>{{ obj.employee_name }}</td>
-                    <td>********</td>
                     <td>{{ obj.get_gender_display }}</td>
                     <td>{{ obj.phone }}</td>
                     <td>{{ obj.date }}</td>
                     <td>{{ obj.get_position_display }}</td>
                     <td>
                         <a class="btn btn-c-primary btn-xs" href="/employee/edit/{{ obj.id }}">编 辑</a>
+                        <a class="btn btn-c-warning btn-xs" href="/employee/reset/{{ obj.id }}">重置密码</a>
                         <a class="btn btn-c-danger btn-xs" href="/employee/delete/{{ obj.id }}">删 除</a>
                     </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">暂无员工数据</td>
                 </tr>
                 {% endfor %}
             </tbody>

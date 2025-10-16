@@ -1,21 +1,6 @@
 {% extends "layout/layout_"|add:request.session.info.role|add:".html" %}
 {% block content %}
 <div class="container">
-    <!-- <div class="panel panel-default">
-            <div class="panel-heading">
-                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                {{ title }}
-            </div>
-            <div class="panel-body">
-                <form method="post" enctype="multipart/form-data" action="/inventory/upload/">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <input type="file" name="excel">
-                    </div>
-                    <input type="submit" value="上传" class="btn btn-info">
-                </form>
-            </div>
-    </div> -->
     <div class="search-bar">
         <div style="float: right;width: 300px">
             <form method="get">
@@ -35,11 +20,6 @@
             <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
             {{ title }}
         </div>
-        <!-- <div class="panel-body">
-                <p>Some default panel content here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum
-                    nulla sed consectetur. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis
-                    vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </div> -->
 
         <table class="table">
             <thead>

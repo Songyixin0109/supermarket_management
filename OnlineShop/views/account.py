@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render,redirect
 from django import forms
 
 from OnlineShop import models
