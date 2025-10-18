@@ -1,86 +1,78 @@
 {% extends "layout/layout_"|add:request.session.info.role|add:".html" %}
 {% load static %}
 {% block content %}
-    <div class="container">
-{#        <div class="panel panel-default">#}
-{#            <div class="panel-heading">折线图</div>#}
-{#            <div class="panel-body">#}
-{#                Panel content#}
-{#            </div>#}
-{#        </div>#}
-
-            <div>
-                <div class="panel panel-default">
-                <div class="panel-heading">柱状图</div>
-                    <div class="panel-body">
-                            <div id="m2" style="width: 100%;height: 400px">
-                    </div>
-                </div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">销量 TOP10</div>
+                <div class="panel-body" style="padding: 0">
+                    <div id="barChart" style="width:100%; height:350px;"></div>
                 </div>
             </div>
-{#            <div>#}
-{#                <div class="panel panel-default">#}
-{#            <div class="panel-heading">饼图</div>#}
-{#            <div class="panel-body">#}
-{#                Panel content#}
-{#            </div>#}
-{#                </div>#}
-{#            </div>#}
         </div>
-
     </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">销售价分布</div>
+                <div class="panel-body" style="padding: 0">
+                    <div id="lineChart" style="width:100%; height:300px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">库存占比</div>
+                <div class="panel-body" style="padding: 0">
+                    <div id="pieChart" style="width:100%; height:300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'js/echarts.min.js' %}"></script>
-    <script type="text/javascript">
-$(function (){
-    initBar();
-});
+<script src="{% static 'js/echarts.min.js' %}"></script>
+<script>
+$(function () {
+    $.getJSON('{% url "inventory_chart" %}', function (res) {
+        if (!res.status) return;
 
-function initBar(){
-    // 初始化 ECharts 实例
-    let myChart = echarts.init(document.getElementById('m2'));
+        const barChart = echarts.init(document.getElementById('barChart'));
+        barChart.setOption({
+            title: { text: '销量 TOP10', left: 'center' },
+            tooltip: { trigger: 'axis' },
+            legend: { bottom: 0, data: res.bar.legend },
+            xAxis: { type: 'category', data: res.bar.x_axis },
+            yAxis: { type: 'value' },
+            series: res.bar.series
+        });
 
-    // 图表的基本配置
-    let option = {
-        title: {
-            text: '库存统计',
-            textAlign: 'auto',
-            left: 'center',
-        },
-        tooltip: {},
-        legend: {
-            data: [],
-            bottom: 0
-        },
-        xAxis: {
-            data: []
-        },
-        yAxis: {},
-        series: []
-    };
+        const lineChart = echarts.init(document.getElementById('lineChart'));
+        lineChart.setOption({
+            title: { text: '销售价分布', left: 'center' },
+            tooltip: { trigger: 'axis' },
+            legend: { bottom: 0, data: res.line.legend },
+            xAxis: { type: 'category', data: res.line.x_axis },
+            yAxis: { type: 'value' },
+            series: res.line.series
+        });
 
-    // 通过 AJAX 获取数据
-    $.ajax({
-        url: '/inventory/chart/',//根目录
-        type: 'get',
-        dataType: 'JSON',
-        success: function(res) {
-            console.log(res)
-            if (res.status) {
-                option.legend.data = res.data.legend;
-                option.xAxis.data = res.data.x_axis;
-                option.series = res.data.series_list;
+        const pieChart = echarts.init(document.getElementById('pieChart'));
+        pieChart.setOption({
+            title: { text: '库存占比', left: 'center' },
+            tooltip: { trigger: 'item', formatter: '{a} <br/>{b}: {c} ({d}%)' },
+            legend: { orient: 'horizontal', bottom: 0, data: res.pie.legend },
+            series: res.pie.series
+        });
 
-                // 使用刚指定的配置项和数据显示图表
-                myChart.setOption(option);
-            }
-        },
-        error: function() {
-            console.error("获取数据失败！");
-        }
+        window.addEventListener('resize', () => {
+            barChart.resize(); lineChart.resize(); pieChart.resize();
+        });
     });
-}
+});
 </script>
 {% endblock %}

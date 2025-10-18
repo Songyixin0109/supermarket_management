@@ -65,13 +65,13 @@
     </nav>
 </div>
 
-<!-- ===== 编辑弹窗（直接写在这里） ===== -->
+<!-- ===== 编辑弹窗 ===== -->
 <div class="modal fade" id="sellEditModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">编辑订单（仅状态可改）</h4>
+                <h4 class="modal-title">编辑订单</h4>
             </div>
             <form id="sellEditForm" class="form-horizontal" method="post" novalidate>
                 {% csrf_token %}
@@ -90,74 +90,74 @@
 
 {% block js %}
 <script>
-$(function () {
-    let nidGlobal;
+    $(function () {
+        let nidGlobal;
 
-    $('.btn-sell-edit').on('click', function () {
-        nidGlobal = $(this).data('nid');
+        $('.btn-sell-edit').on('click', function () {
+            nidGlobal = $(this).data('nid');
 
-        $.getJSON('/sellorder/admin/edit/' + nidGlobal + '/', function (res) {
-            if (res.status) {
-                $('#modalBody').empty();   
+            $.getJSON('/sellorder/admin/edit/' + nidGlobal + '/', function (res) {
+                if (res.status) {
+                    $('#modalBody').empty();
 
-                Object.keys(res.fields).forEach(function (key) {
-                    if (key === '状态可选值') return;   
+                    Object.keys(res.fields).forEach(function (key) {
+                        if (key === '状态可选值') return;
 
-                    const readonly = (key !== '状态');
-                    const isSelect = (key === '状态');
-                    let html = `
+                        const readonly = (key !== '状态');
+                        const isSelect = (key === '状态');
+                        let html = `
                       <div class="form-group">
                         <label class="col-sm-3 control-label">${key}</label>
                         <div class="col-sm-8">
                           ${isSelect
-                            ? `<select name="status" class="form-control">
+                                ? `<select name="status" class="form-control">
                                  ${res.fields['状态可选值'].map(
-                                    ([v, l]) => `<option value="${v}" ${v===res.fields['状态']?'selected':''}>${l}</option>`
-                                 ).join('')}
+                                    ([v, l]) => `<option value="${v}" ${v === res.fields['状态'] ? 'selected' : ''}>${l}</option>`
+                                ).join('')}
                                </select>`
-                            : `<input type="text" class="form-control" value="${res.fields[key]}" ${readonly?'disabled':''}>`
-                          }
+                                : `<input type="text" class="form-control" value="${res.fields[key]}" ${readonly ? 'disabled' : ''}>`
+                            }
                           <span class="error-msg" style="color:red;"></span>
                         </div>
                       </div>`;
-                    $('#modalBody').append(html);
-                });
-
-                $('#sellEditModal').modal('show');
-            } else {
-                alert(res.error || '加载失败');
-            }
-        });
-    });
-
-    // 保存按钮
-    $('#btnSellSave').off().on('click', function () {
-        const $btn = $(this);
-        if ($btn.prop('disabled')) return;
-        $btn.prop('disabled', true).text('保存中…');
-        $('.error-msg').text('');
-
-        $.ajax({
-            url: '/sellorder/admin/edit/' + nidGlobal + '/',
-            type: 'post',
-            data: $('#sellEditForm').serialize(),
-            dataType: 'json',
-            success: function (res) {
-                if (res.status) {
-                    alert(res.msg || '状态已更新');
-                    $('#sellEditModal').modal('hide');
-                    location.reload();
-                } else {
-                    $.each(res.error, function (k, v) {
-                        $('#id_' + k).next('.error-msg').text(v[0]);
+                        $('#modalBody').append(html);
                     });
+
+                    $('#sellEditModal').modal('show');
+                } else {
+                    alert(res.error || '加载失败');
                 }
-            },
-            complete: function () {
-                $btn.prop('disabled', false).text('保存');
-            }
+            });
+        });
+
+        // 保存按钮
+        $('#btnSellSave').off().on('click', function () {
+            const $btn = $(this);
+            if ($btn.prop('disabled')) return;
+            $btn.prop('disabled', true).text('保存中…');
+            $('.error-msg').text('');
+
+            $.ajax({
+                url: '/sellorder/admin/edit/' + nidGlobal + '/',
+                type: 'post',
+                data: $('#sellEditForm').serialize(),
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status) {
+                        alert(res.msg || '状态已更新');
+                        $('#sellEditModal').modal('hide');
+                        location.reload();
+                    } else {
+                        $.each(res.error, function (k, v) {
+                            $('#id_' + k).next('.error-msg').text(v[0]);
+                        });
+                    }
+                },
+                complete: function () {
+                    $btn.prop('disabled', false).text('保存');
+                }
+            });
         });
     });
-});
 </script>
 {% endblock %}

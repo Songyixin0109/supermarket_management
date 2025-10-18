@@ -1,18 +1,11 @@
-from datetime import datetime
 from decimal import Decimal
 from math import ceil
 from openpyxl import load_workbook
 
 from django.shortcuts import render, redirect
-from django.core.exceptions import ValidationError
-from django.utils.safestring import mark_safe
-from django import forms
-from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from django.db.models.signals import post_save
 from django.db.models import Q
-from django.dispatch import receiver
 from django.utils import timezone
 from django.db import transaction
 
@@ -20,9 +13,9 @@ from OnlineShop import models
 from OnlineShop.utils.bootstrap import BootStrapModelForm
 from OnlineShop.utils.encrypt import md5
 from OnlineShop.utils.pagination import Pagination
-from OnlineShop.models import PurchaseOrders, InventoryItems, EmployeeInfo
+from OnlineShop.models import EmployeeInfo
 
-class SellOrderInfoModelForm(forms.ModelForm):
+class SellOrderInfoModelForm(BootStrapModelForm):
     class Meta:
         model = models.SellOrders
         fields = '__all__'
@@ -52,7 +45,7 @@ def sellorder_info_admin(request):
     }
     return render(request, 'order/sellorder_info_admin.html', context)
 
-class SellOrderAdminEditForm(forms.ModelForm):
+class SellOrderAdminEditForm(BootStrapModelForm):
     """管理员编辑：仅 status 可改"""
     class Meta:
         model = models.SellOrders
@@ -115,7 +108,7 @@ def sellorder_delete_user(request, nid):
     return redirect('/sellorder/info/user/')
 
 
-class SellOrderAddModelForm(forms.ModelForm):
+class SellOrderAddModelForm(BootStrapModelForm):
     class Meta:
         model = models.SellOrders
         exclude = ['id', 'user', 'status', 'order_date', 'updated_at']   
@@ -174,7 +167,7 @@ def sellorder_add(request):
 
 
 
-class PurchaseOrderInfoModelForm(forms.ModelForm):
+class PurchaseOrderInfoModelForm(BootStrapModelForm):
     class Meta:
         model = models.PurchaseOrders
         fields = '__all__'
@@ -207,7 +200,7 @@ def purchaseorder_info(request):
         'page_string':page_object.html()}
     return render(request, 'order/purchase_info.html', context)
     
-class PurchaseOrderStatusForm(forms.ModelForm):
+class PurchaseOrderStatusForm(BootStrapModelForm):
     """管理员编辑：仅 status 可改"""
     class Meta:
         model = models.PurchaseOrders
