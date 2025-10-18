@@ -48,6 +48,7 @@ urlpatterns = [
     path('admin/login/',account.admin_login,name='admin_login'),
     path('user/login/',account.user_login,name='user_login'),
     path('employee/login/',account.employee_login,name='employee_login'),
+    path('image/code/',account.image_code,name='image_code'),
     path('logout/',account.logout,name='logout'),
 
     #订单管理

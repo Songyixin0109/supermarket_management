@@ -28,7 +28,7 @@
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, .25);
             padding: 2.5rem 3rem;
-            width: 320px;
+            width: 350px;
             color: #fff;
             font-size: 1.8rem;
         }
@@ -44,7 +44,7 @@
             border: none;
             border-radius: 20px;
             padding: 8px 15px;
-            margin-bottom: 1.2rem;
+            margin-top: .5rem;
             height: 40px;
             box-shadow: none;
         }
@@ -53,16 +53,22 @@
             box-shadow: 0 0 0 2px rgba(255, 255, 255, .5);
         }
 
-        .login-card button {
-            margin-top: .5rem;
+        .login-card a {
+            margin-top: 1rem;
         }
 
         .login-card label {
-            margin-bottom: .5rem;
+            margin-top: .5rem;
+            margin-bottom: 0;
         }
 
         .login-card .text-danger {
             font-size: .85rem;
+        }
+
+        .login-card .row-align {
+            display: flex;
+            align-items: center;
         }
     </style>
 </head>
@@ -72,15 +78,32 @@
         <h2 class="text-center">登 录</h2>
         <form id="loginForm" method="post" novalidate>
             {% csrf_token %}
+
             {% for field in form %}
             <div class="mb-3">
                 <label>{{ field.label }}</label>
+                {% if field.name == 'code' %}
+                <div class="row row-align">
+                    <div class="col-xs-7">
+                        <input type="text" name="{{ field.name }}" id="{{ field.auto_id }}" class="form-control"
+                            placeholder="请输入验证码">
+
+                    </div>
+                    <div class="col-xs-5">
+                        <img src="/image/code/" id="image_code" style="height:40px;width:100%;cursor:pointer;"
+                            onclick="this.src='/image/code/?'+Math.random()" alt="验证码">
+                    </div>
+                </div>
+                <small class="d-block" style="min-height:1.2em;color: red;">{{ field.errors.0 }}</small>
+                {% else %}
                 {{ field }}
-                <small class=" d-block" style="min-height:1.2em;color: red;">
+                <small class="d-block" style="min-height:1.2em;color: red;">
                     {{ field.errors.0 }}
                 </small>
+                {% endif %}
             </div>
             {% endfor %}
+
             <a href="javascript:;" onclick="document.getElementById('loginForm').submit()"
                 class="btn btn-c-primary w-100">登 录</a>
         </form>
